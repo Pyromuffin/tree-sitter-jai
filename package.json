@@ -1,0 +1,35 @@
+{
+  "name": "tree-sitter-jai",
+  "version": "1.0.0",
+  "description": "parser for jai",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kelly macneill",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.14.1"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.16.5"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.jai",
+      "file-types": [
+        "jai"
+      ]
+    }
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "jai",
+        "extensions": [
+          "jai"
+        ]
+      }
+    ]
+  }
+}
