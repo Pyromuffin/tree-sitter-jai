@@ -1,21 +1,17 @@
 module.exports = grammar({
     name: 'jai',
-    inline: $ => [$.constant_declaration, $.variable_reference, $.type_expression],
-    extras: $ => [$.inline_comment, $.block_comment, /[ \n\r\t]*/, $.note],
+    inline: $ => [$.variable_reference, $.type_expression],
+    extras: $ => [$.inline_comment, $.block_comment, /[ \n\r\t]*/, $.note, $.compiler_directive],
     word: $ => $.identifier,
-    
+    externals: $ => [
+      $.here_string_body,
+    ],
 
     rules: {
 
-      source_file: $ => repeat(choice(
-        $._definition,
-        $._import_statement,
-        $.if_directive,
-        $.load_statement,
-        $.export_scope_directive,
-        $.file_scope_directive,
-        $.assert_statement,
-      )),
+      source_file: $ => repeat(
+        $._statement,        
+      ),
 
       _expression: $ => choice(
         $.number,
@@ -23,8 +19,6 @@ module.exports = grammar({
         $._binary_expression,
         $._unary_expression,
         $.cast_expression,
-        $.function_call,
-        $.directive_call,
         $.parenthetical,
         $.built_in_type,
         $.type_directive,
@@ -33,8 +27,20 @@ module.exports = grammar({
         $.run_directive,
         $.load_directive,
         $.identifier,
-        $.caller_location
-        // TODO: other kinds of expressions
+        $.caller_location,
+        $.func_type_decl,
+        $.func_call,
+        $.parameter_decl,
+        $.named_arg,
+        $.array_literal,
+      ),
+
+      _expression_with_block: $ => choice(
+        $.func_defn,
+        $.enum_definition,
+        $.struct_definition,
+        $.union_definition,
+        $.here_string,
       ),
 
       _statement: $ => choice(
@@ -44,7 +50,7 @@ module.exports = grammar({
         $.for_loop,
         $.implicit_for_loop,
         $.block,
-        $.function_call_statement,
+        $._func_call_statement,
         $.assignment,
         $.compound_assignment,
         $.while_loop,
@@ -58,29 +64,42 @@ module.exports = grammar({
         $.load_statement,
         $.backtick_statement,
         $.assert_statement,
+        $.remove_statement,
+        $.empty_statement,
+        $._import_statement,
+        $.union_definition,
       ),
       
 
       _definition: $ => choice(
         $.constant_definition,
         $.namespace_definition,
-        $.struct_definition,
-        $.enum_definition,
-        $.function_definition,
-        $.macro_definition,
         $.variable_decl,
-        $.type_definition,
         $.compound_variable_decl,
       ),
   
       inline_comment: $ => seq('//', /.*/),
       block_comment: $ => seq(
         '/*',
-        repeat(/./),
+        repeat(choice(/./, $.block_comment)),
         '*/'
       ),
 
+      here_string: $ => seq(
+        "#string",
+        $.here_string_body,
+        //repeat(/./),
+        //$.here_string_terminator,
+        ),
+      
+
       uninitialized_token: $ => "---",
+
+      remove_statement: $ => seq(
+        "remove",
+        $._expression,
+        ";"
+      ),
 
       char_directive: $ => seq(
         "#char",
@@ -100,158 +119,86 @@ module.exports = grammar({
 
       caller_location: $ => "#caller_location",
 
-      type_directive: $ => seq(
+      type_directive: $ => prec.left(seq(
         "#type",
-        $.function_declaration
-      ),
+        $._expression
+      )),
 
       import_directive: $ => seq(
         '#import',
         field("name", $.string_literal)
       ),
 
-      file_scope_directive: $ => seq(
-        '#scope_file'
-      ),
+      file_scope_directive: $ =>
+        '#scope_file',
 
-      export_scope_directive: $ => seq(
-        '#scope_export'
-      ),
-
+      export_scope_directive: $ =>
+        '#scope_export',
 
       
       _import_statement: $ => seq(
         $.import_directive, ";"
       ),
       
-      function_definition: $ => seq(
-        $.constant_declaration,
-        $.function_declaration,
-        $.block
-      ),
-
-      macro_definition: $ => seq(
-        $.constant_declaration,
-        $.macro_declaration,
-        $.block
-      ),
-
-
-      type_definition: $ => seq(
-        $.constant_declaration,
-        $.type_expression,
-        ";"
-      ),
-
       struct_definition: $ => seq(
-        $.constant_declaration,
+        optional("*"),
         "struct",
+        $.block
+      ),
+
+      union_definition: $ => seq(
+        optional("*"),
+        "union",
         $.block
       ),
 
       enum_member: $ =>seq(
         field("name", $.identifier),
         optional(
-          seq("=", $._expression)),
+          seq( choice("=", "::"), $._expression)),
           ";"
       ),
 
+      // slightly higher precedence so that we prefer this to identifier :: enum_declaration expressions.
       enum_definition: $ => seq(
-        "enum",
+        choice("enum", "enum_flags"),
+        optional($._expression),
         "{",
-        repeat($.enum_member),
+          repeat($.enum_member),
         "}"
       ),
 
       namespace_definition: $ => seq(
-        $.constant_declaration,
+        $._constant_declaration,
         $._import_statement,
       ),
 
-      constant_declaration: $ => seq(
+      _constant_declaration: $ => seq(
         field("name", $.identifier),
         ':',
         optional($.type_expression),
         ':'
       ),
 
-      constant_definition: $ => prec(1, seq(
-        $.constant_declaration,
-        $._expression,
-        ";"
-      )),
-
-
-      _return_sequence: $ =>prec.left(
-      seq(
-        "->",
-        optional("("),
-        $._return_decl,
-        repeat(seq(",", $._return_decl)),
-        optional(")")
-        )),
-
-      function_declaration: $ => prec.left(seq(
-        optional("inline"),
-        "(",
-          optional($._parameter_decl),
-          repeat(seq(",", $._parameter_decl)),
-        ")",
-        optional($._return_sequence),
-        optional("#compiler") // no idea what this does. 
-      )),
-
-      macro_declaration: $ => prec.left(seq(
-        "(",
-          optional($._parameter_decl),
-          repeat(seq(",", $._parameter_decl)),
-        ")",
-          optional($._return_sequence),
-          "#expand"
-      )),
-
-      _parameter_decl: $ =>
-      choice($.parameter_decl_simple, $.named_parameter_decl),
-
-      parameter_decl_simple: $ => $.type_expression,
-
-      named_parameter_decl: $ => seq(
-        optional(choice(
-          field("maybe_constant", "$$"),
-          field("constant_type", "$")
-          )),
-        field("name", $.identifier),
-        ':',
-        optional(".."),
+      constant_definition: $ => seq(
+        $._constant_declaration,
         choice(
-          $.parameter_type_expression,
-          seq($.parameter_type_expression, "=", $._expression),
-          seq( "=", $._expression),
-        ),
+          seq($._expression, ";"),
+          $._expression_with_block,
+        )
       ),
-
-      _return_decl: $ =>prec.left(seq(
-      choice($.return_decl_simple, $.named_return_decl),
-      optional("#must"),
-      )),
-
-      return_decl_simple: $ => prec(10, $.type_expression),
-
-      named_return_decl: $ => prec(10, seq(
-        field("name", $.identifier),
-        ':',
-        $.type_expression,
-      )),
-
-
+      
   
+      relative_pointer_decl: $ => prec.left(seq(
+        "*~",
+        $.type_expression
+      )),
+
       array_decl: $ => seq(
         "[",
         optional(choice($._expression, "..")),
         "]"
       ),
-
-      pointer_decl: $ => "*",
 
       built_in_type: $ => choice(
         'bool',
@@ -270,18 +217,54 @@ module.exports = grammar({
         'u32',
         'u64',
         'void',
-        'enum',
-        'enum_flags',
-        "Any"
       ),
 
-      parameter_type_expression : $ => seq(
-        repeat(choice($.array_decl, $.pointer_decl, "$")),
+      named_arg: $ =>prec(-1,seq(
+        $.identifier,
+        "=",
         $._expression,
-      ),
+      )),
 
+      func_call: $ =>prec(1, seq(
+        $._expression,
+        $._enclosed_expression_list,
+        )),
+        
+        _func_call_statement: $ => seq(
+          $.func_call,
+          ";"
+        ),
+
+        _expr_list: $ => prec.left(seq(
+          $._expression,
+          repeat(prec.left(seq(",", $._expression))),
+        )),
+
+        _enclosed_expression_list : $ => seq(
+          "(",
+          optional($._expression),
+          repeat(seq(",", $._expression)),
+          ")",
+        ),
+
+        trailing_return_types: $ => prec(1,seq(
+          "->",
+          choice($._expr_list, $._enclosed_expression_list)
+        )),
+
+        func_type_decl : $ => prec.left(seq(
+          $._enclosed_expression_list,
+          optional($.trailing_return_types),
+          repeat(prec.left(choice($._directive_with_expression, $.compiler_directive)))
+        )),
+
+        func_defn : $ => seq(
+          optional("inline"),
+          $.func_type_decl,
+          $.block,
+        ),
+        
       type_expression : $ => seq(
-        repeat(choice($.array_decl, $.pointer_decl)),
         $._expression,
       ),
     
@@ -297,12 +280,23 @@ module.exports = grammar({
         ':',
         choice(
           $.type_expression,
+          $._expression_with_block,
           seq( $.type_expression, "=", $._expression),
           seq("=", $._expression),
           ),
         ';'
       ),
       
+      parameter_decl: $ => prec.left(-1, seq(
+        field("name", $.identifier),
+        ':',
+        choice(
+          $.type_expression,
+          seq( $.type_expression, "=", $._expression),
+          seq("=", $._expression),
+          )
+      )),
+
       _expression_list: $ => seq(
         field("name", $._expression),
         repeat1(seq(",", field("name", $._expression)))
@@ -313,23 +307,25 @@ module.exports = grammar({
         ":",
         choice(
           $.type_expression,
-          seq( $.type_expression, "=", $._expression),
-          seq("=", $._expression),
+          seq( $.type_expression, "=", choice($._expression_list, $.func_call)),
+          seq("=", choice($._expression_list, $.func_call)),
           ),
         ';'
       ),
 
       using_statement: $ => seq(
         "using",
-        optional(seq(field("name", $.identifier), ":")),
-        choice($.type_expression, $.enum_definition),
-        ';'
+        choice(
+          seq($._expression, ";"),
+           $._expression_with_block,
+           $._definition,
+           ),
       ),
 
       compound_assignment: $ => prec.left(seq(
           $._expression_list,
           "=",
-          $._expression,
+          choice($._expression_list, $.func_call),
           ";"
         )),
 
@@ -370,10 +366,12 @@ module.exports = grammar({
         $.block
       ),
 
+      empty_statement: $ => ";",
+
 
       return_statement: $ => seq(
         'return',
-        optional(seq($._expression, repeat(seq(",", $._expression)))),
+        optional($._expr_list),
         ';'
       ),
 
@@ -395,6 +393,11 @@ module.exports = grammar({
         prec.left(5, field("bitwise_not", seq("~", $._expression))),
         prec.left(5, field("autocast", seq("xx", $._expression))),
         prec.left(5, field("inline", seq("inline", $._expression))),
+        prec.left(5, field("polymorph", seq("$", $._expression))),
+        prec.left(5, field("using", seq("using", $._expression))),
+        prec.left(5, field("must", seq($._expression, "#must"))),
+        prec.left(5, seq($.array_decl, $._expression)),
+        prec.left(5, seq($.relative_pointer_decl, $._expression)),
         prec.left(-1, field("expand", seq("..", $._expression))),
       ),
 
@@ -417,6 +420,8 @@ module.exports = grammar({
         prec.left(2, seq($._expression, '&', $._expression)),
         prec.left(2, seq($._expression, '|', $._expression)),
         prec.left(2, seq($._expression, '^', $._expression)),
+        prec.left(2, seq($._expression, '<<', $._expression)),
+        prec.left(2, seq($._expression, '>>', $._expression)),
         field("multiply", prec.left(2, seq($._expression, '*', $._expression))),
         field("divide", prec.left(2, seq($._expression, '/', $._expression))),
         field("mod", prec.left(2, seq($._expression, '%', $._expression))),
@@ -447,14 +452,6 @@ module.exports = grammar({
         $._statement,
       ),
 
-      directive_call: $=> seq(
-        "#",
-        $.identifier,
-        "(",
-        optional($.function_args),
-        ")"
-      ),
-
       cast_expression: $ => prec.left(seq(
         field("name", "cast"),
         optional(",no_check"),
@@ -463,30 +460,6 @@ module.exports = grammar({
         ")",
         $._expression
       )),
-
-
-      _function_arg: $ => seq(
-      optional(seq($.identifier, "=")), $._expression
-      ),
-
-      function_args: $ => seq(
-        repeat(seq($._function_arg,",")),
-        $._function_arg
-      ),
-
-
-      function_call: $ => seq(
-        field("name", $.variable_reference),
-        "(",
-        optional($.function_args),
-        ")"
-      ),
-
-      function_call_statement: $ => seq(
-        $.function_call,
-        ";"
-      ),
-
 
       parenthetical: $ => prec(-1, seq(
         "(",
@@ -537,7 +510,40 @@ module.exports = grammar({
         ";"
       ),
 
+      add_context: $ => seq(
+        "#add_context",
+        $._statement,
+      ),
 
+      foreign_directive: $ => prec.left(seq(
+        "#foreign",
+        optional(seq($._expression, optional($.string_literal))),
+      )),
+
+      deprecated_directive: $ => prec.left(seq(
+        "#deprecated",
+        $.string_literal,
+      )),
+
+      _directive_with_expression: $ =>prec.left(choice(
+        $.foreign_directive,
+        $.deprecated_directive,
+        $.run_directive,
+        seq($.compiler_directive, $._expression),
+      )),
+
+      array_literal: $ => seq(
+        "{",
+          ":",
+          $._expression,
+          ":",
+          optional($._expression),
+          repeat(seq(",", $._expression)),
+          optional(","),
+        "}"
+      ),
+
+      compiler_directive: $ =>  /\#[a-zA-Z_][a-zA-Z_0-9]*/,
       note: $ => /@[a-zA-Z_][a-zA-Z_0-9]*/,
       identifier: $ => /[a-zA-Z_][a-zA-Z_0-9]*/,
   

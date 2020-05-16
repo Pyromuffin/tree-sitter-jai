@@ -1,533 +1,486 @@
 /*
-  Owner: Jonathan Blow <jon@number-none.com>
-  Description: The basic routines used in most programs.
- */
+    Owner: Jonathan Blow <jon@number-none.com>
+    Description: Minimal code the compiler needs to compiler user source code. Volatile!
 
-#load "Array.jai";
-#load "Simple_String.jai";
-#load "String_Builder.jai";
-#load "Print.jai";
-#load "tests.jai";   // @Temporary; once the test framework doesn't need us to, we won't load this automatically.
+    This file should only contain things the compiler needs in order
+    to successfully compile user-level code. (For example, things for which
+    it needs pointers at various stages in the compilation process).
 
-#scope_file
-#if _MEMORY_DEBUGGER  #load "Memory_Debugger.jai";
-#scope_export
- 
-get_command_line_arguments :: () -> [] string {
-    c_args := __command_line_arguments;
-    result := NewArray(c_args.count, string);
-    for c_args {
-        str_length :: (x: *u8) -> int @pure {  // Copied from String.jai to avoid dependency.
-            assert(x != null);
+    This file cannot contain any varargs
+    procedures, because those would need to use the type of Any, but they might
+    compile before Any. We could make dependencies on Any every time there's a
+    varargs, but that seems like an unnecessary complication that would
+    incur a runtime performace penalty.
 
-            p := x;
-            while << p  { p += 1; }
-            return p - x;
-        }
-        
-        result[it_index].data = it;
-        result[it_index].count = str_length(it);
-    }
+                             -- jblow, 15 May 2015.
 
-    return result;
+    Addendum: We also can't compile any code here that does string comparisons,
+    due to lack of __strings_are_equal, __strings_are_not_equal! Also, we can't
+    use type_info() here! Really it is best if there is no imperative code at all.
+
+*/
+
+Type_Info_Tag :: enum u32 {
+    INTEGER   :: 0;
+    FLOAT     :: 1;
+    BOOL      :: 2;
+    STRING    :: 3;
+    POINTER   :: 4;
+    PROCEDURE :: 5;
+    VOID      :: 6;
+    STRUCT    :: 7;
+    ARRAY     :: 8;
+    OVERLOAD_SET :: 9;
+    ANY       :: 10;
+    ENUM      :: 11;
+    POLYMORPHIC_VARIABLE :: 12;
+    TYPE      :: 13;
+    CODE      :: 14;
 }
 
-assert :: inline (arg: bool, message := "", args: .. Any, loc := #caller_location) {
-    if arg return;
+// The Type_Infos all need to be here because when you say
+// type_info(x), we downcast to the most specific Type_Info.
+// This is useful. But requires more in the preload. Sigh!
 
-    if context.handling_assertion_failure  return;  // Avoid infinite loops.
-    context.handling_assertion_failure = true;
+Type_Info :: struct {
+    type : Type_Info_Tag;          // @@ IC: I think it would be nice to rename this "tag" to avoid type.type confusion.
 
-    // We provide 'loc' in case _STACK_TRACE is turned off, but assertion_failed may well
-    // look at the stack trace if it is available.
-    context.assertion_failed(loc, tprint(message, ..args));
-    context.handling_assertion_failure = false;
-} @NoProfile @NoDebug
+    index_within_type_table: u32;
+    runtime_size:            s64;  // WARNING: runtime_size may be unset for structs at compile-time if compilation is not finished. (It will be -1 in this case.)
+}
 
+Type_Info_Integer :: struct {
+    using info : Type_Info;
+    signed       : bool;
+}
 
-alloc :: (size: s64, allocator: Allocator = null, allocator_data: *void = null) -> *void {
-    if allocator == null {
-        allocator = context.allocator;
-        allocator_data = context.allocator_data;
-    }
+Type_Info_Float :: struct {
+    using info : Type_Info;
+}
 
-    result := allocator(Allocator_Mode.ALLOCATE, size, 0, null, allocator_data);
+// There is no Type_Info_Bool.
 
-    #if _MEMORY_DEBUGGER  check_alloc(allocator, allocator_data, result, size);
+Type_Info_String :: struct {
+    using info : Type_Info;
+
+    relative_pointer_size : s32;  // 0 means not relative.
+}
+
+Type_Info_Pointer :: struct {
+    using info : Type_Info;
+
+    pointer_to  : *Type_Info;
+    relative_pointer_size : s32;  // 0 means not relative.
+}
+
+Type_Info_Procedure :: struct {
+    using info : Type_Info;
+
+    argument_types : [] *Type_Info;
+    return_types   : [] *Type_Info;
+
+    procedure_flags: Flags;
     
-    return result;
-}
-
-free :: (memory: *void, allocator: Allocator = null, allocator_data: *void = null) {
-    if allocator == null {
-        allocator = context.allocator;
-        allocator_data = context.allocator_data;
-    }
-    
-    #if _MEMORY_DEBUGGER  check_free(allocator, allocator_data, memory);
-    
-    allocator(Allocator_Mode.FREE, 0, 0, memory, allocator_data);
-}
-
-realloc :: (memory: *void, size: s64, old_size: s64, allocator: Allocator = null, allocator_data: *void = null) -> *void {
-    if allocator == null {
-        allocator = context.allocator;
-        allocator_data = context.allocator_data;
-    }
-    
-    result := allocator(Allocator_Mode.RESIZE, size, old_size, memory, allocator_data);
-
-    #if _MEMORY_DEBUGGER  check_realloc(allocator, allocator_data, memory, old_size, result, size);
-    
-    return result;
-}
-
-// Allocates a string.
-alloc_string :: (count: int, allocator := context.allocator, allocator_data := context.allocator_data) -> string {
-    assert(count >= 0);
-    
-    str: string;
-    if !count return str;
-
-    str.data = alloc(count, allocator, allocator_data);
-    str.count = count;
-    return str;
-}
-
-talloc_string :: (count: int) -> string {
-    return alloc_string(count, __temporary_allocator, null);
-}
-
-free :: inline (s: string, allocator: Allocator = null, allocator_data: *void = null) {
-    free(s.data, allocator, allocator_data);
-}
-
-push_allocator :: (allocator: Allocator, allocator_data := null) #expand {
-    old_allocator := context.allocator;
-    old_allocator_data := context.allocator_data;
-
-    context.allocator = allocator;
-    context.allocator_data = allocator_data;
-
-    `defer context.allocator = old_allocator;
-    `defer context.allocator_data = old_allocator_data;
-}
-
-
-// @@ Move to reflection?
-get_field :: (info: *Type_Info_Struct, name: string) -> *Type_Info_Struct_Member {
-    // First pass: Don't try recursing.
-    for * info.members {
-        ptr := *it.name;
-        if name == it.name return it;
-    }
-
-    // Second pass: See if we can get something recursively.
-    for * info.members {
-        if (it.flags & it.flags.USING) && (it.type.type == Type_Info_Tag.STRUCT) {
-            result := get_field(cast(*Type_Info_Struct)it.type, name);
-            if result return result;
-        }
-    }
-    
-    return null;
-}
-
-// @@ Move to Compiler.jai? 
-running_at_compile_time :: () -> bool #compiler {
-    // If called outside the compiler, we're not running at compile time!
-    return false;
-}
-
-
-// For floating point values, it returns the second value if the first is NaN.
-min :: (a: $T, b: T) -> T {
-    if a < b return a;
-    return b;
-}
-
-// For floating point values, it returns the second value if the first is NaN.
-max :: (a: $T, b: T) -> T {
-    if b < a return a;
-    return b;
-}
-
-// WARNING
-// WARNING
-// WARNING
-// These overloads of 'max' and 'min' are error-prone... we need to
-// restrict them to numeric types, and/or rename max/min in Math
-// to be max_of_type / min_of_type (WE REALLY NEED TO DO THAT).
-
-max :: inline (a: $T, x: ..T) -> T {
-    m := a;
-    for x if m < it m = it;
-    return m;
-}
-
-min :: inline (a: $T, x: ..T) -> T {
-    m := a;
-    for x if it < m m = it;
-    return m;
-}
-
-clamp :: (x: $T, a: T, b: T) -> T {
-    return min(max(x, a), b);
-}
-
-Swap :: (a: *$T, b: *T) {   // @@ Why uppercase?
-    tmp := << a;
-    << a = << b;
-    << b = tmp;
-}
-
-// IC: Isn't this cleaner than the version above? a,b = swap(a,b); @@ Note, in go you can simply do a,b = b,a, but not in jai!
-// Yeah it is probably cleaner!
-swap :: inline (a: $T, b: T) -> T #must, T #must {
-    return b, a;
-}
-
-// @Cleanup: Put a better version of this into the standard library.
-enum_names :: ($t: Type) -> [] string {
-    info := type_info(t);
-    assert(info.type == Type_Info_Tag.ENUM);
-    return info.names;
-}
-
-enum_values :: ($t: Type) -> [] int {
-    info := type_info(t);
-    assert(info.type == Type_Info_Tag.ENUM);
-    return info.values;
-}
-
-enum_highest_value :: ($t: Type) -> s64 {  // @Cleanup: A safe version of this will return type_of(T.loose)
-    low, high := enum_range_given_info(type_info(t));
-    return high;
-}
-
-enum_range :: ($t: Type) -> (low: s64, high: s64) {  // @Cleanup: A safe version of this will return type_of(T.loose)
-    low, high := enum_range_given_info(type_info(t));
-    return low, high;
-}
-
-enum_range_given_info :: (info: *Type_Info_Enum) -> (low: s64, high: s64) {  // @Cleanup: A safe version of this will return type_of(T.loose)
-    if info.values.count == 0  return 0, 0;
-
-    low  := cast(s64) info.values[0];
-    high := low;
-    for info.values {
-        low  = min(low,  it);
-        high = max(high, it);
-    }
-
-    return low, high;
-}
-
-// ## Temporary Memory Functions
-
-// IC: This is such a common function, that I think is nice to have a shorter name for it.
-talloc :: temporary_alloc;
-
-temporary_alloc :: inline (size: s64) -> *void {
-    return __temporary_allocator(Allocator_Mode.ALLOCATE, size, 0, null, null);
-}
-
-__temporary_allocator :: (mode: Allocator_Mode, requested_size: s64, old_size: s64, old_memory_pointer: *void, allocator_data: *void) -> *void {
-    using Allocator_Mode;
-    
-    if #complete mode == {
-      case FREE;
-        return null;
-      case RESIZE; #through;
-      case ALLOCATE;
-        // Pad to 8-byte alignment.
-        size := (requested_size + 7) & ~7;
-        
-        ts := context.temporary_storage;
-
-        if size > ts.size - ts.occupied {
-            success := add_new_page(ts, size);
-            if !success  return null;
-        }
-
-        result := ts.data + ts.occupied;
-        ts.occupied += cast(s32) size;
-        ts.high_water_mark = max(ts.high_water_mark, ts.occupied);
-        
-        if result && (mode == RESIZE) {
-            memcpy(result, old_memory_pointer, min(old_size, requested_size));
-        }
-        
-        return result;
+    using Flags :: enum u32 {
+        IS_ELSEWHERE    :: 0x1;
+        IS_COMPILE_TIME :: 0x2;
+        IS_POLYMORPHIC  :: 0x4;
+        IS_COMPILER_GENERATED   :: 0x8;
+        IS_C_CALL       :: 0x20;
+        IS_TYPE_ONLY    :: 0x40;
+        IS_INTRINSIC    :: 0x80;
     }
 }
 
-Temporary_Storage_State :: struct {
-    top_overflow_page: *Temporary_Storage.Overflow_Page;
+// There is no Type_Info_Void.
+
+Struct_Flags :: enum_flags u32 {
+    UNION            :: 0x2;
+    NOT_INSTANTIABLE :: 0x4;
+    FOREIGN          :: 0x8;
+    HAS_NO_PADDING   :: 0x80;
+    POLYMORPHIC      :: 0x200;
+}
+
+Struct_Status_Flags :: enum_flags u32 {
+    INCOMPLETE :: 0x1;
+    LOCAL      :: 0x4;
+}
+
+Type_Info_Struct :: struct {
+    using info : Type_Info;
+
+    name : string;
+    members : [] Type_Info_Struct_Member;
+
+    status_flags: Struct_Status_Flags;
+    struct_flags: Struct_Flags;
+    
+    polymorph_source_struct: *Type_Info_Struct;
+
+    initializer: (*void) -> void;
+    
+    // @Cleanup: Make constant_storage a string?
+    constant_storage_size: s64;
+    constant_storage_buffer: *u8;
+}
+
+Type_Info_Struct_Member :: struct {
+    name : string;
+    type : *Type_Info;
+    offset_in_bytes : s64;
+    
+    flags : Flags;
+
+    notes: [] string;
+
+    offset_into_constant_storage : s64 = -1;
+
+    using Flags :: enum_flags u32 {
+        CONSTANT :: 0x1;
+        IMPORTED :: 0x2;
+        USING    :: 0x4;
+    }
+}
+
+Type_Info_Array :: struct {
+    using info : Type_Info;
+
+    element_type : *Type_Info;
+
+    array_type   : Array_Type;
+    array_count  : s64;    // -1 unless this array is is of a known compile-time size, i.e. array_type is FIXED.
+
+    relative_pointer_size : s32;  // 0 means not relative.
+
+    using Array_Type :: enum u32 {
+        FIXED     :: 0;
+        VIEW      :: 1;
+        RESIZABLE :: 2;
+    }
+}
+
+// There is no Type_Info_Any.
+
+Enum_Status_Flags :: enum_flags u32 {
+    INCOMPLETE :: 0x1;
+}
+
+Type_Info_Enum :: struct {
+    using info : Type_Info;
+    
+    name : string;
+    internal_type   : *Type_Info_Integer;
+
+    names:         [] string;
+    values:        [] s64;
+
+    status_flags: Enum_Status_Flags;
+    is_flags := false;
+}
+
+// There is no Type_Info_Polymorphic_Variable.
+// There is no Type_Info_Type.
+
+Any :: struct {
+     type : *Type_Info;
+     value_pointer : *void;
+}
+
+Allocator :: #type (mode: Allocator_Mode, size: s64, old_size: s64, old_memory_pointer: *void, allocator_data: *void) -> *void;
+Logger    :: #type (ident: string, message: string, mode: Log_Mode, data: *void) -> void;
+
+Workspace :: s64;
+
+Allocator_Mode :: enum {  // @Volatile: If you change these, the bytecode has to change!
+    ALLOCATE  :: 0;
+    RESIZE    :: 1;
+    FREE      :: 2;
+}
+
+Log_Mode :: enum {
+    NONE     :: 0;
+    MINIMAL  :: 1;
+    EVERYDAY :: 2;
+    VERBOSE  :: 3;
+}
+
+Stack_Trace_Procedure_Info :: struct {
+    name:      string;
+    location:  Source_Code_Location;
+
+    procedure_address: *void;
+
+    // @Incomplete: We may wish to provide the procedure type here?
+    // procedure_type:    *Type_Info_Procedure;
+}
+
+// @Speed: We can cut down Stack_Trace_Node so that much of it
+// lives in static space, so it'd just be 3 pointers: Pointer to
+// location record (filename, line number, procedure), 64-bit hash,
+// next pointer. It can be bigger if we want to store depth also...
+Stack_Trace_Node :: struct {  // @Volatile: Must match the layout built into the compiler.
+    next:        *Stack_Trace_Node;
+    info:        *Stack_Trace_Procedure_Info;
+    hash:        u64;
+    call_depth:  u32;
+    line_number: u32;
+}
+
+// @Volatile: Context_Base must match internal compiler settings in general.h
+Context_Base :: struct {
+    thread_index   : u32;
+
+    allocator      := default_allocator;
+    allocator_data : *void;
+
+    logger         := default_logger;
+    logger_data    : *void;
+
+    assertion_failed := default_assertion_failed;
+    
+    temporary_storage : *Temporary_Storage;
+
+    // Note: We don't #if this out right now when _STACK_TRACE is false, because
+    // _STACK_TRACE gets added after the Preload is loaded, for implementation detail
+    // reasons. We could change this eventually, but in the meantime, you just can't
+    // use _STACK_TRACE in the Preload at all. So if _STACK_TRACE is false, this pointer
+    // will still exist in the context, but it will stay null.
+    stack_trace: *Stack_Trace_Node;
+
+    // Things that don't take up any space:
+    default_logger           :: (message: string, ident: string, mode: Log_Mode, data: *void) { write_strings("[", ident, "] ", message); };
+    default_assertion_failed :: (loc: Source_Code_Location, message: string) { runtime_support_assertion_failed :: (loc: Source_Code_Location, message: string) #runtime_support; runtime_support_assertion_failed(loc, message); } // @Cleanup
+    default_allocator        :: __default_allocator;
+
+    handling_assertion_failure := false;  // Used internally. Do not mess with this value.
+}
+
+#add_context using base: Context_Base;
+
+__default_allocator :: (mode: Allocator_Mode, size: s64, old_size: s64, old_memory_pointer: *void, allocator_data: *void) -> *void {
+    // @Temporary: This bridge is just here to deal with some problem involving #runtime_support procedure pointers not being handled
+    // correctly by the backends. Once that is fixed, this can be removed.
+    // :RuntimeSupportCleanup
+    runtime_support_default_allocator :: (mode: Allocator_Mode, size: s64, old_size: s64, old_memory_pointer: *void, allocator_data: *void) -> *void #runtime_support;
+    return runtime_support_default_allocator(mode, size, old_size, old_memory_pointer, allocator_data);
+}
+
+Temporary_Storage :: struct {  // @Volatile: Must match general.h
+    data:     *u8;
+    size:     s64;       // @Volatile: Must stay s32, or init code in Bytecode_Builder must change.
     occupied: s64;
-}
-
-
-get_temporary_storage_mark :: inline () -> Temporary_Storage_State {
-    ts := context.temporary_storage;
+    high_water_mark: s64;
     
-    state: Temporary_Storage_State = ---;
-    state.occupied = ts.occupied;
-    state.top_overflow_page = ts.overflow_pages;
+    overflow_allocator := __default_allocator;
+    overflow_allocator_data: *void;
 
-    return state;
-}
-
-// Typically used as follows:
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// mark := get_temporary_storage_mark();
-// defer set_temporary_storage_mark(mark);
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Now we have the `auto_release_temp` macro.
-set_temporary_storage_mark :: inline (state: Temporary_Storage_State) {
-    ts := context.temporary_storage;
-    free_pages_down_to(ts, state.top_overflow_page);
-
-    if state.top_overflow_page {
-        page := state.top_overflow_page;
-        ts.data = (cast(*u8) page) + ALIGNED_OVERFLOW_PAGE_ALLOCATION;
-        ts.size = page.size;
-        assert(page.size >= 0);
-    } else {
-        ts.data = ts.original_data;
-        ts.size = ts.original_size;
-        assert(ts.overflow_pages == null);
-    }
-
-    ts.occupied = state.occupied;
-}
-
-reset_temporary_storage :: () {
-    ts := context.temporary_storage;
-    ts.data = ts.original_data;
-    ts.size = ts.original_size;
-    ts.occupied = 0;
-    ts.high_water_mark = 0;
-
-    // @Speed: Maybe we should keep the allocated pages on the side,
-    // rather than freeing them every frame. It probably would not
-    // add much complexity here.
-    free_pages_down_to(ts, null);
-}
-
-auto_release_temp :: () #expand {
-    __mark := get_temporary_storage_mark();
-    `defer set_temporary_storage_mark(__mark);
-}
-
-
-
-decode_relative_pointer :: (relative_pointer_size: s32, address: *void) -> (pointer: *void, offset: s64) {
-    offset: s64;
-    if relative_pointer_size == {
-      case 1;
-        ival := << cast(*s8) address;
-        if ival  offset = ival ^ 0x80;
-        else return null, 0;
-        
-      case 2;
-        ival := << cast(*s16) address;
-        if ival  offset = ival ^ 0x8000;
-        else return null, 0;
-
-      case 4;
-        ival := << cast(*s32) address;
-        if ival  offset = ival ^ 0x80000000;
-        else return null, 0;
-
-      case 8;
-        ival := << cast(*s64) address;
-        if ival  offset = ival ^ 0x8000000000000000;
-        else return null, 0;
-
-      case;
-        assert(false);
-    }
-
-    pointer := cast(*u8)address + offset;
-    return pointer, offset;
-}
-
-write_relative_pointer :: ($type: Type, pointer_address: *void, target_address: *void) {
-    size := size_of(type);
-    ival: type;
+    overflow_pages: *Overflow_Page;
+    original_data: *u8;  // Data to restore after clearing overflow pages. @Simplify: Maybe could be an Overflow_Page, but maybe we want to be able to assert on overflow_pages==null to ensure performance.
+    original_size: s64;
     
-    if target_address {
-        if size == {
-          case 1;
-            ival = cast(type)(target_address - pointer_address) ^ 0x80;
-            
-          case 2;
-            ival = cast(type)(target_address - pointer_address) ^ 0x8000;
-
-          case 4;
-            ival = cast(type)(target_address - pointer_address) ^ 0x8000_0000;
-
-          case 8;
-            ival = cast(type)(target_address - pointer_address) ^ 0x8000_0000_0000_0000;
-
-          case;
-            assert(false);
-        }
-    }
-    
-    << cast(*type) pointer_address = ival;
-}
-
-Construct :: (memory: *void, $T: Type) {
-    ini :: initializer_of(T);
-
-    #if ini {
-        inline ini(memory);
-    } else {
-        memset(memory, 0, size_of(T));
+    Overflow_Page :: struct {
+        next: *Overflow_Page;
+        allocator: Allocator;
+        allocator_data: *void;
+        size: s64;
     }
 }
 
-New :: ($T: Type, $initialized := true, allocator := context.allocator, allocator_data := context.allocator_data) -> *T {
-    memory := alloc(size_of(T), allocator, allocator_data);
+// @Cleanup: __strings_are_equal, __srings_are_not_equal should not
+// be in here ... we can have intrinsics for these.
+strings_are_equal     :: (a: string, b: string) -> bool #runtime_support #compiler;
+strings_are_not_equal :: (a: string, b: string) -> bool #runtime_support #compiler;
 
-    #if initialized {
-        ini :: initializer_of(T);
+__command_line_arguments: [] *u8;
 
-        #if ini {
-            inline ini(memory);
-        } else {
-            memset(memory, 0, size_of(T));
-        }
-    }
-    
-    return cast(*T) memory;
+
+Source_Code_Location :: struct {
+    fully_pathed_filename: string;
+    line_number:           s64;
+    character_number:      s64;
 }
 
-NewArray :: (count: s64, $T: Type, $initialized := true, allocator := context.allocator, allocator_data := context.allocator_data) -> [] T {
-    // NewArray is for when we want to new a not-known-at-compile-time
-    // number of things...
+get_current_workspace :: () -> Workspace #compiler {
+    // If calling this at runtime, we just return 0.
+    // You might think we want to assert, but stuff
+    // like thread_create calls this and doesn't think
+    // about whether it's compile-time or not, and maybe
+    // that is more convenient.
 
-    // @Temporary: This overload of alloc returns *T, not *void, but the other one returns *void... we are casting it so that we don't get confused.  :VeryBadAllocWith
-    memory := cast(*void) alloc(size_of(T) * count, allocator, allocator_data);
-
-    result: [] T = ---;
-    result.count = count;
-    result.data  = memory;
-
-    #if initialized {
-        ini :: initializer_of(T);
-
-        #if ini {
-            for 0..count-1 {
-                inline ini(memory);
-                memory += size_of(T);
-            }
-        } else {
-            memset(memory, 0, count * size_of(T));
-        }
-    }
-    
-    return result;
+    return cast(Workspace) 0;
 }
 
-#if OS_WINDOWS {
-    #load "windows.jai";
+// We need this here because #code directives result in
+// a *Code_Node. Sigh.      -jblow, 11 November 2017
+Code_Node :: struct {
+    Kind :: enum u8 {
+        UNINITIALIZED :: 0;
+        BLOCK     :: 1;
+        LITERAL   :: 2;
+        IDENT     :: 3;
+        UNARY_OPERATOR  :: 4;
+        BINARY_OPERATOR :: 5;
+        PROCEDURE_BODY  :: 6;
+        PROCEDURE_CALL  :: 7;
+        // 8 is currently unused.
+        WHILE     :: 9;
+        IF        :: 10;
+        LOOP_CONTROL :: 11;
+        CASE      :: 12;
+        REMOVE    :: 13;
+        RETURN    :: 14;
+        EACH      :: 15;
+
+        TYPE_DEFINITION :: 16;
+        TYPE_INSTANTIATION :: 17;
+        ENUM :: 18;
+
+        PROCEDURE_HEADER :: 19;
+        STRUCT :: 20;
+        COMMA_SEPARATED_ARGUMENTS :: 21;
+        EXTRACT :: 22;
+        SEQUENCE :: 23;
+        MAKE_VARARGS :: 24;
+
+        DECLARATION :: 25;
+
+        CAST_EXPRESSION :: 26;
+
+        DIRECTIVE_IMPORT :: 27;
+        DIRECTIVE_INLINE :: 28;
+        DIRECTIVE_THROUGH :: 29;
+        DIRECTIVE_LOAD :: 30;
+
+        DIRECTIVE_RUN :: 31;
+        DIRECTIVE_CODE :: 32;
+        DIRECTIVE_POKE_NAME :: 33;
+        // DIRECTIVE_IF_DEFINED :: 34;  Not currently implemented.
+        DIRECTIVE_BAKE :: 35;
+        DIRECTIVE_MODIFY :: 36;
+        DIRECTIVE_FOREIGN_LIBRARY :: 37;
+
+        SIZE_OR_TYPE_INFO :: 38;
+        CONTEXT_OR_PUSH   :: 39;
+
+        NOTE :: 40;
+
+        DIRECTIVE_PLACE :: 41;
+        DIRECTIVE_SCOPE :: 42;
+        DIRECTIVE_STATIC_IF :: 43;
+        DIRECTIVE_LOCATION :: 44;
+        DIRECTIVE_ALIGN :: 45;
+        DIRECTIVE_ADD_CONTEXT :: 46;
+
+        COMPOUND_DECLARATION :: 47;
+        DEFER :: 48;
+        USING :: 49;
+        PLACEHOLDER :: 50;
+    };
+
+    kind := Kind.UNINITIALIZED;
+
+    type: *Type_Info;
+    node_flags: u64;
+    
+    filename:    string;
+
+    // l0 is the index of the starting line. l1 is the index of the ending line.
+    // c0 is the index of the starting character (in bytes). c1 is the index of
+    // the ending character's byte, +1 (i.e. the start of the next character).
+    // @Speed: I made these s32 for speed/memory purposes, because there are a lot
+    // of them! This may be insufficiently visionary... we may want to change them
+    // to s64 before release. Consider this.
+    // Pseudonym73 in chat is suggesting using a byte offset instead of
+    // line/character pair. This would require decoding that via some process
+    // that computes the line+character. It may be better though. Consider this.
+    l0, c0, l1, c1: s32;
+
+    serial:         s64;
 }
 
-#if OS_LINUX {
-    #load "linux.jai";
+
+// Most of these intrinsics are not actually required to compile code,
+// so they should not be in this file. We should probably make an Intrinsics
+// module for them.    -jblow, 28 December 2019
+
+memcpy :: (dest: *void, source: *void, count: s64) #intrinsic;
+memcmp :: (a: *void, b: *void, count: s64) -> s16  #intrinsic;  // @Incomplete: Do we want to tell people how many bytes in the first difference is?  // @Incomplete: The C spec for this routine sucks; we should probably return the actual byte difference. But the bytecode_runner version uses the C library version which just returns <=>0. I don't really want to inherit this ill-defined version. Unless we think it really doesn't matter. I dunno.
+memset :: (dest: *void, value: u8, count: s64)     #intrinsic;
+
+// Valid for bool, pointers, s8, s16, s32, s64, u8, u16, u32, u64, enums.
+atomic_swap       :: (dest: *$T, new_value: T) -> (old_value: T) #intrinsic;
+compare_and_swap  :: (dest: *$T, old_value: T, new_value: T) -> bool #intrinsic;
+compare_and_swap2 :: (dest: *void, old_value_1: $T1_64, old_value_2: $T2_64, new_value_1: T1_64, new_value_2: T2_64) -> bool #intrinsic;
+// Future functionality: A version of compare_and_swap2 that returns the old values as return values, so you can loop on those instead of needing a separate read step in the loop ... so says jacobly0 in chat. Err actually as pointers, since we can't loop treating a multiple return value as a truth condition. As mentioned, this current version is more of a conditional store.
+
+debug_break :: () #intrinsic;
+pause    :: () #intrinsic;
+rdtsc    :: () -> u64 #intrinsic;
+rdtscp   :: () -> u64 #intrinsic;
+rdseed   :: () -> (success: bool, value: u64) #intrinsic;
+rdrand   :: () -> (success: bool, value: u64) #intrinsic;
+prefetch :: (pointer: *void, hint: u8) #intrinsic;  // hint 0 = NTA, 1 = T0, 2 = T1, 3 = T2
+read_gs_qword :: (offset: u32) -> u64 #intrinsic;
+
+atomic_add :: (dest: *$T, value: T) -> T  #intrinsic;  // @Incomplete: Do we want to guard against floating-point numbers here?
+atomic_increment :: (dest: *$T) #intrinsic;  // @Incomplete: Do we want to guard against floating-point numbers here?
+
+atomic_and :: (dest: *$T, value: T) #intrinsic;  // @Incomplete: Do we want to guard against floating-point numbers here?
+atomic_or  :: (dest: *$T, value: T) #intrinsic;
+atomic_xor :: (dest: *$T, value: T) #intrinsic;
+
+mfence :: () #intrinsic;
+
+cpuid  :: (info: [4] u32, fid: u32, exfid: u32 = 0) #intrinsic;
+xgetbv :: (xcr: u32) -> u64 #intrinsic;
+
+write_string  :: (s: string) #runtime_support;
+write_strings :: (strings: ..string) #runtime_support;
+
+
+
+// Rather than declaring these structs here, we could have the compiler
+// do its own hardcoded thing internally so it doesn't require these declarations.
+// I dunno man!
+
+Newstring    :: struct {
+    count     : s64;  // Signed so that if we do for 0..count-1 it works...
+    data      : *u8;
+};
+
+Array_View_64 :: struct {
+    count     : s64;  // Signed so that if we do for 0..count-1 it works...   
+    data      : *u8;
 }
 
-#if OS_MACOSX {
-    #load "osx.jai";
+Array_View_32 :: struct {
+    count     : s32;
+    data      : *~s32 u8;
 }
 
-#if OS_SWITCH {
-    #load "switch.jai";
+Array_View_16 :: struct {
+    count     : s16;
+    data      : *~s16 u8;
 }
 
-#scope_file
-free_pages_down_to :: (ts: *Temporary_Storage, page: *ts.Overflow_Page) {
-    cursor := ts.overflow_pages;
-    while cursor != page {
-        if !cursor {
-            logprint("Temporary_Storage", "Error: Attempt to free down to page %, but that page was not found! This is probably an error in using set_temporary_storage_mark, or a general memory corruption.\n", page);
-            ts.overflow_pages = null;
-            return;
-        }
-        
-        next := cursor.next;
-        free(cursor, cursor.allocator, cursor.allocator_data);
-        cursor = next;
-    }
-
-    ts.overflow_pages = page;
+Array_View_8 :: struct {
+    count     : s8;
+    data      : *~s8 u8;
 }
 
-ALIGNED_OVERFLOW_PAGE_ALLOCATION :: 32; 
-add_new_page :: (ts: *Temporary_Storage, minimum_size: s64) -> bool {
-    #assert(size_of(Temporary_Storage.Overflow_Page) <= ALIGNED_OVERFLOW_PAGE_ALLOCATION);
+// Resizable_Array is used in Print, so we left it here,
+// but maybe it should go into file scope and Print should
+// have its own copy.
+// (It's also used by the compiler internally.)
+Resizable_Array :: struct {
+    count      : s64;  // Signed so that if we do for 0..count-1 it works...
+    data       : *void;
+    allocated  : s64;
 
-    data_size : s64 = ts.original_size - ALIGNED_OVERFLOW_PAGE_ALLOCATION;
-    if data_size < minimum_size  data_size = minimum_size;
-    
-    size_including_header := data_size + ALIGNED_OVERFLOW_PAGE_ALLOCATION;
-    
-    // It's legal for overflow_allocator to be null, in which case
-    // we do whatever alloc does.
-    allocator      := ts.overflow_allocator;
-    allocator_data := ts.overflow_allocator_data;
-    
-    memory := alloc(size_including_header, allocator, allocator_data);
-    if !memory {
-        logprint("Temporary_Storage", "Failed to allocate % bytes for a Temporary_Storage overflow page.\n", size_including_header);
-        return false;  // This is going to be bad!
-    }
-    
-    page := cast(*ts.Overflow_Page) memory;
-    page.next           = ts.overflow_pages;
-    page.allocator      = allocator;
-    page.allocator_data = allocator_data;
-    page.size           = data_size;
-
-    ts.overflow_pages = page;
-    
-    ts.data = memory + ALIGNED_OVERFLOW_PAGE_ALLOCATION;
-    ts.size = data_size;
-    ts.occupied = 0;
-    assert(ts.size >= 0);
-    
-    return true;
-}
-    
-
-#scope_export
-
-// pack_stack_trace is convenient in case you want to store the stack trace
-// on a data structure. You can't just store a pointer to context.stack_trace,
-// because that data will be destroyed as the stack unwinds. So this routine
-// copies that trace into a packed array.
-pack_stack_trace :: () -> [] Stack_Trace_Node {
-    result: [..] Stack_Trace_Node;
-
-    node := context.stack_trace;
-    while node {
-        array_add(*result, << node);
-        node = node.next;
-    }
-
-    // Fix up the 'next' pointers so you can use them normally.
-    for * result {
-        if it.next   // The one that was already null, at the end, leave it null. Otherwise:
-            it.next = it + 1;  // Set 'next' to point at the subsequent element in the array.
-    }
-    
-    return result;
+    allocator      : Allocator;
+    allocator_data : *void;
 }
 
-// This function is kind of silly and should probably get removed? I dunno.
-log :: (ident: string, message: string, mode: Log_Mode = Log_Mode.EVERYDAY) {
-    context.logger(ident, message, mode, context.logger_data);
-}
+// This is used so that we can typecheck/polymorph a name-mapping procedure for #load directives.
+__name_mapper :: #type (string) -> string;
