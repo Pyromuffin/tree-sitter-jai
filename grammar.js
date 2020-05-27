@@ -3,12 +3,9 @@ module.exports = grammar({
     //inline: $ => [$.type_expression],
     extras: $ => [$.inline_comment, $.block_comment, /[ \n\r\t]*/, $.compiler_directive_simple, $.note_simple],
     word: $ => $.identifier,
-    externals: $ => [
-      $.here_string_body,
-    ],
+    externals: $ => [$.here_string],
 
     conflicts: $ =>[
-      //[$.argument_list, $.parameter_list], 
       [$.function_pointer_type, $.parameter_list],
       [$.function_pointer_type, $.parenthesis],
       [$.parameter, $._simple_name],
@@ -122,11 +119,6 @@ module.exports = grammar({
         repeat(choice(/./, $.block_comment)),
         '*/'
       ),
-
-      here_string: $ => seq(
-        "#string",
-        $.here_string_body,
-        ),
       
         lambda_expression: $ => prec(-1, seq(
           optional('async'),
@@ -363,8 +355,12 @@ module.exports = grammar({
         repeat($.trailing_directive)
       )),
 
+      
+      names: $ => CommaSep1($._expression),
+
       named_block_decl: $ => prec(1, seq( // precedence over named decl
-        $._expression,
+        //field("name", $._expression),
+        $.names,
         ":",
         optional($.type_expression), 
         choice("=", ":"),
@@ -374,11 +370,14 @@ module.exports = grammar({
       
 
       named_decl: $ => seq(
-        CommaSep1($._expression),
+        $.names,
         ":",
         choice(
           $.type_expression,
-          seq(optional($.type_expression), choice("=", ":"), CommaSep1($._expression)),
+          seq(
+            optional($.type_expression), 
+            choice("=", ":"), 
+            CommaSep1($._expression)),
           ),
           ";",
       ),

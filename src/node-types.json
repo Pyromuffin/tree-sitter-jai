@@ -2904,21 +2904,6 @@
     }
   },
   {
-    "type": "here_string",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "here_string_body",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "if_directive",
     "named": true,
     "fields": {},
@@ -3618,6 +3603,45 @@
       "required": true,
       "types": [
         {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
+          "named": true
+        },
+        {
+          "type": "names",
+          "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "type_expression",
+          "named": true
+        },
+        {
+          "type": "union_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "named_decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
           "type": "array_literal",
           "named": true
         },
@@ -3659,6 +3683,10 @@
         },
         {
           "type": "lambda_expression",
+          "named": true
+        },
+        {
+          "type": "names",
           "named": true
         },
         {
@@ -3713,12 +3741,12 @@
     }
   },
   {
-    "type": "named_decl",
+    "type": "named_return",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "array_literal",
@@ -3793,10 +3821,6 @@
           "named": true
         },
         {
-          "type": "type_expression",
-          "named": true
-        },
-        {
           "type": "unary_operator_left",
           "named": true
         },
@@ -3816,12 +3840,12 @@
     }
   },
   {
-    "type": "named_return",
+    "type": "names",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "array_literal",
@@ -5941,10 +5965,6 @@
     "named": false
   },
   {
-    "type": "#string",
-    "named": false
-  },
-  {
     "type": "#through",
     "named": false
   },
@@ -6209,7 +6229,7 @@
     "named": false
   },
   {
-    "type": "here_string_body",
+    "type": "here_string",
     "named": true
   },
   {
