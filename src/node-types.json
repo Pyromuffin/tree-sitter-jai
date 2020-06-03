@@ -753,7 +753,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "array_literal",
@@ -773,6 +773,10 @@
         },
         {
           "type": "block",
+          "named": true
+        },
+        {
+          "type": "block_end",
           "named": true
         },
         {
@@ -972,6 +976,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "block_end",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "break_statement",

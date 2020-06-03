@@ -1288,6 +1288,10 @@
         ]
       }
     },
+    "block_end": {
+      "type": "STRING",
+      "value": "}"
+    },
     "block": {
       "type": "SEQ",
       "members": [
@@ -1303,8 +1307,8 @@
           }
         },
         {
-          "type": "STRING",
-          "value": "}"
+          "type": "SYMBOL",
+          "name": "block_end"
         },
         {
           "type": "REPEAT",
@@ -3239,7 +3243,7 @@
     },
     {
       "type": "PATTERN",
-      "value": "[ \\n\\r\\t]*"
+      "value": "\\s+"
     },
     {
       "type": "SYMBOL",
