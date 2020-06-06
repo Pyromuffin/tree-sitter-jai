@@ -3351,11 +3351,6 @@
     }
   },
   {
-    "type": "insert_lol",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "lambda_expression",
     "named": true,
     "fields": {
@@ -3612,7 +3607,31 @@
       "required": true,
       "types": [
         {
+          "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "built_in_type",
+          "named": true
+        },
+        {
+          "type": "cast_expression",
+          "named": true
+        },
+        {
           "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "expression_like_directive",
+          "named": true
+        },
+        {
+          "type": "func_call",
           "named": true
         },
         {
@@ -3620,7 +3639,19 @@
           "named": true
         },
         {
+          "type": "function_pointer_type",
+          "named": true
+        },
+        {
           "type": "here_string",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "lambda_expression",
           "named": true
         },
         {
@@ -3628,11 +3659,43 @@
           "named": true
         },
         {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parenthesis",
+          "named": true
+        },
+        {
+          "type": "scientific_notation",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
           "type": "struct_definition",
           "named": true
         },
         {
-          "type": "type_expression",
+          "type": "ternary_expression",
+          "named": true
+        },
+        {
+          "type": "type_directive",
+          "named": true
+        },
+        {
+          "type": "unary_operator_left",
+          "named": true
+        },
+        {
+          "type": "unary_operator_right",
+          "named": true
+        },
+        {
+          "type": "uninitialized_token",
           "named": true
         },
         {
@@ -3683,6 +3746,10 @@
           "named": true
         },
         {
+          "type": "function_pointer_type",
+          "named": true
+        },
+        {
           "type": "here_string",
           "named": true
         },
@@ -3724,10 +3791,6 @@
         },
         {
           "type": "type_directive",
-          "named": true
-        },
-        {
-          "type": "type_expression",
           "named": true
         },
         {
@@ -3967,21 +4030,6 @@
     }
   },
   {
-    "type": "note_with_args",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "note_simple",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "operator_definition",
     "named": true,
     "fields": {},
@@ -4015,7 +4063,95 @@
         "required": false,
         "types": [
           {
-            "type": "type_expression",
+            "type": "array_literal",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "built_in_type",
+            "named": true
+          },
+          {
+            "type": "cast_expression",
+            "named": true
+          },
+          {
+            "type": "enum_definition",
+            "named": true
+          },
+          {
+            "type": "expression_like_directive",
+            "named": true
+          },
+          {
+            "type": "func_call",
+            "named": true
+          },
+          {
+            "type": "function_definition",
+            "named": true
+          },
+          {
+            "type": "function_pointer_type",
+            "named": true
+          },
+          {
+            "type": "here_string",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "lambda_expression",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesis",
+            "named": true
+          },
+          {
+            "type": "scientific_notation",
+            "named": true
+          },
+          {
+            "type": "string_literal",
+            "named": true
+          },
+          {
+            "type": "struct_definition",
+            "named": true
+          },
+          {
+            "type": "ternary_expression",
+            "named": true
+          },
+          {
+            "type": "type_directive",
+            "named": true
+          },
+          {
+            "type": "unary_operator_left",
+            "named": true
+          },
+          {
+            "type": "unary_operator_right",
+            "named": true
+          },
+          {
+            "type": "uninitialized_token",
+            "named": true
+          },
+          {
+            "type": "union_definition",
             "named": true
           }
         ]
@@ -4150,21 +4286,6 @@
         },
         {
           "type": "union_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "parenthesized_return_type_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "return_type",
           "named": true
         }
       ]
@@ -4801,59 +4922,6 @@
     }
   },
   {
-    "type": "return_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "default_value",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "type_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "return_type_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "return_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "scientific_notation",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "number",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "source_file",
     "named": true,
     "fields": {},
@@ -5063,7 +5131,17 @@
   {
     "type": "string_literal",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "escape_sequence",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "struct_definition",
@@ -5424,15 +5502,103 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
+      "multiple": true,
+      "required": false,
       "types": [
         {
-          "type": "parenthesized_return_type_list",
+          "type": "array_literal",
           "named": true
         },
         {
-          "type": "return_type_list",
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "built_in_type",
+          "named": true
+        },
+        {
+          "type": "cast_expression",
+          "named": true
+        },
+        {
+          "type": "default_value",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "expression_like_directive",
+          "named": true
+        },
+        {
+          "type": "func_call",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "function_pointer_type",
+          "named": true
+        },
+        {
+          "type": "here_string",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "lambda_expression",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parenthesis",
+          "named": true
+        },
+        {
+          "type": "scientific_notation",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "ternary_expression",
+          "named": true
+        },
+        {
+          "type": "type_directive",
+          "named": true
+        },
+        {
+          "type": "unary_operator_left",
+          "named": true
+        },
+        {
+          "type": "unary_operator_right",
+          "named": true
+        },
+        {
+          "type": "uninitialized_token",
+          "named": true
+        },
+        {
+          "type": "union_definition",
           "named": true
         }
       ]
@@ -5440,21 +5606,6 @@
   },
   {
     "type": "type_directive",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "type_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "type_expression",
     "named": true,
     "fields": {},
     "children": {
@@ -5950,10 +6101,6 @@
     "named": false
   },
   {
-    "type": "#insert",
-    "named": false
-  },
-  {
     "type": "#line",
     "named": false
   },
@@ -6082,10 +6229,6 @@
     "named": false
   },
   {
-    "type": "//",
-    "named": false
-  },
-  {
     "type": "/=",
     "named": false
   },
@@ -6162,10 +6305,6 @@
     "named": false
   },
   {
-    "type": "async",
-    "named": false
-  },
-  {
     "type": "bool",
     "named": false
   },
@@ -6198,10 +6337,6 @@
     "named": false
   },
   {
-    "type": "e",
-    "named": false
-  },
-  {
     "type": "else",
     "named": false
   },
@@ -6212,6 +6347,10 @@
   {
     "type": "enum_flags",
     "named": false
+  },
+  {
+    "type": "escape_sequence",
+    "named": true
   },
   {
     "type": "export_scope_directive",
@@ -6258,11 +6397,19 @@
     "named": false
   },
   {
+    "type": "insert_lol",
+    "named": true
+  },
+  {
     "type": "int",
     "named": false
   },
   {
     "type": "note_simple",
+    "named": true
+  },
+  {
+    "type": "note_with_args",
     "named": true
   },
   {
@@ -6299,6 +6446,14 @@
   },
   {
     "type": "s8",
+    "named": false
+  },
+  {
+    "type": "scientific_notation",
+    "named": true
+  },
+  {
+    "type": "string",
     "named": false
   },
   {

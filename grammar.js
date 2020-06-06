@@ -1,7 +1,15 @@
 module.exports = grammar({
   name: 'jai',
-  //inline: $ => [$.type_expression],
-  extras: $ => [$.inline_comment, $.block_comment, /\s+/, $.compiler_directive_simple, $.note_simple],
+  //inline: $ => [$.note_simple, $.number],
+  extras: $ =>
+   [
+    $.inline_comment,
+    $.block_comment,
+    /\s+/,
+    $.compiler_directive_simple, 
+    $.note_simple
+  ],
+
   word: $ => $.identifier,
   externals: $ => [$.here_string],
 
@@ -32,7 +40,7 @@ module.exports = grammar({
       
       type_directive: $ => prec.left( seq(
         "#type",
-        $.type_expression
+        $._type_expression
       )),
   
     _expression: $ => choice(
@@ -112,16 +120,16 @@ module.exports = grammar({
 
     _expression_statement: $ => seq( $._expression, ";"),
 
+      // stolen from the c grammar.
+      inline_comment: $ => token(seq('//', /.*/)),
+      block_comment: $ => seq(
+        '/*',
+        repeat(choice(/./, $.block_comment)),
+        '*/'
+      ),
+      
 
-    inline_comment: $ => seq('//', /.*/),
-    block_comment: $ => seq(
-      '/*',
-      repeat(choice(/./, $.block_comment)),
-      '*/'
-    ),
-    
       lambda_expression: $ => prec(-1, seq(
-        optional('async'),
         choice($.parameter_list, $.identifier),
         '=>',
         field('body', choice($.block, $._expression))
@@ -136,14 +144,26 @@ module.exports = grammar({
       ";"
     ),
 
-    escape_sequence: $ => /\\./,
-    normal_char: $=> /./,
-
+    // taken from c grammar
     string_literal: $ => seq(
       '"',
-      repeat(choice(/./, /\\./, "//", "/*", "*/")),
-      '"'
+      repeat(choice(
+        token.immediate(prec(1, /[^\\"\n]+/)),
+        $.escape_sequence
+      )),
+      '"',
     ),
+
+    escape_sequence: $ => token(prec(1, seq(
+      '\\',
+      choice(
+        /[^xuU]/,
+        /\d{2,3}/,
+        /x[0-9a-fA-F]{2,}/,
+        /u[0-9a-fA-F]{4}/,
+        /U[0-9a-fA-F]{8}/
+      )
+    ))),
 
     backtick_statement: $ => seq(
       "`",
@@ -194,7 +214,7 @@ module.exports = grammar({
       'float',
       'int',
       'char',
-      //'string',
+      'string',
       's8',
       's16',
       's32',
@@ -229,24 +249,24 @@ module.exports = grammar({
       ),
         
       
-      return_type: $ => prec.left(1, 
+      _return_type: $ => prec.left(1, 
         choice(
-          $.type_expression,
+          $._type_expression,
           seq(
             $.identifier,
             ":",
             choice(
-              $.type_expression,
-              seq(optional($.type_expression), $.default_value),
+              $._type_expression,
+              seq(optional($._type_expression), $.default_value),
             ),
           )),
       ),
 
-      return_type_list: $ => prec.left(CommaSep1($.return_type)),
+      _return_type_list: $ => prec.left(CommaSep1($._return_type)),
 
-      parenthesized_return_type_list: $ => prec(1, seq(
+      _parenthesized_return_type_list: $ => prec(1, seq(
         "(",
-        CommaSep($.return_type),
+        CommaSep($._return_type),
         ")"
       )),
 
@@ -254,8 +274,8 @@ module.exports = grammar({
       trailing_return_types: $ => seq(
         "->",
         choice(
-          $.return_type_list,
-          $.parenthesized_return_type_list
+          $._return_type_list,
+          $._parenthesized_return_type_list
           ),
       ),
 
@@ -276,7 +296,7 @@ module.exports = grammar({
         optional(choice(
           seq(":",
             optional($.parameter_modifier),
-            field('type', $.type_expression),
+            field('type', $._type_expression),
             optional($.default_value)),
           seq(":", $.default_value),
         ))
@@ -321,7 +341,7 @@ module.exports = grammar({
         $.function_definition,
       ),
       
-    type_expression : $ =>prec.left(
+    _type_expression : $ =>prec.left(
     choice(
       $._expression,
       $.function_pointer_type
@@ -364,7 +384,7 @@ module.exports = grammar({
       //field("name", $._expression),
       $.names,
       ":",
-      optional($.type_expression), 
+      optional($._type_expression), 
       choice("=", ":"),
       optional("inline"),
       $._expression_with_block
@@ -375,9 +395,9 @@ module.exports = grammar({
       $.names,
       ":",
       choice(
-        $.type_expression,
+        $._type_expression,
         seq(
-          optional($.type_expression), 
+          optional($._type_expression), 
           choice("=", ":"), 
           CommaSep1($._expression)),
         ),
@@ -555,10 +575,10 @@ module.exports = grammar({
     ),
 
     // good luck lol!
-    insert_lol: $ => seq(
+    insert_lol: $ => token(seq(
       "#insert",
       /.*/,
-    ),
+    )),
 
     ternary_expression: $ => prec.left(seq(
       "ifx",
@@ -649,22 +669,23 @@ module.exports = grammar({
     )),
 
     note_simple: $ => /@[a-zA-Z_][a-zA-Z_0-9]*/,
-    note_with_args: $ => seq(
-      $.note_simple,
+    note_with_args: $ => token(seq(
+      /@[a-zA-Z_][a-zA-Z_0-9]*/,
       "(",
       repeat(/./),
       ")",
-    ),
+    )),
 
     identifier: $ => /[a-zA-Z_][a-zA-Z_0-9]*/,
 
     number: $ => /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
-    scientific_notation: $ => seq(
-      $.number,
+    
+    scientific_notation: $ => token(seq(
+      /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
       "e",
       choice("+","-"),
-      $.number,
-      )
+      /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
+      ))
   }
 }
 );
