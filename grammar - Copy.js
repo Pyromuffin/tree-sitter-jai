@@ -40,7 +40,7 @@ module.exports = grammar({
       
       type_directive: $ => prec.left( seq(
         "#type",
-        $.type_expression
+        $._type_expression
       )),
   
     _expression: $ => choice(
@@ -214,7 +214,7 @@ module.exports = grammar({
       'float',
       'int',
       'char',
-      //'string',
+      'string',
       's8',
       's16',
       's32',
@@ -249,24 +249,24 @@ module.exports = grammar({
       ),
         
       
-      return_type: $ => prec.left(1, 
+      _return_type: $ => prec.left(1, 
         choice(
-          $.type_expression,
+          $._type_expression,
           seq(
             $.identifier,
             ":",
             choice(
-              $.type_expression,
-              seq(optional($.type_expression), $.default_value),
+              $._type_expression,
+              seq(optional($._type_expression), $.default_value),
             ),
           )),
       ),
 
-      return_type_list: $ => prec.left(CommaSep1($.return_type)),
+      _return_type_list: $ => prec.left(CommaSep1($._return_type)),
 
-      parenthesized_return_type_list: $ => prec(1, seq(
+      _parenthesized_return_type_list: $ => prec(1, seq(
         "(",
-        CommaSep($.return_type),
+        CommaSep($._return_type),
         ")"
       )),
 
@@ -274,8 +274,8 @@ module.exports = grammar({
       trailing_return_types: $ => seq(
         "->",
         choice(
-          $.return_type_list,
-          $.parenthesized_return_type_list
+          $._return_type_list,
+          $._parenthesized_return_type_list
           ),
       ),
 
@@ -296,7 +296,7 @@ module.exports = grammar({
         optional(choice(
           seq(":",
             optional($.parameter_modifier),
-            field('type', $.type_expression),
+            field('type', $._type_expression),
             optional($.default_value)),
           seq(":", $.default_value),
         ))
@@ -341,7 +341,7 @@ module.exports = grammar({
         $.function_definition,
       ),
       
-    type_expression : $ =>prec.left(
+    _type_expression : $ =>prec.left(
     choice(
       $._expression,
       $.function_pointer_type
@@ -384,7 +384,7 @@ module.exports = grammar({
       //field("name", $._expression),
       $.names,
       ":",
-      optional($.type_expression), 
+      optional($._type_expression), 
       choice("=", ":"),
       optional("inline"),
       $._expression_with_block
@@ -395,9 +395,9 @@ module.exports = grammar({
       $.names,
       ":",
       choice(
-        $.type_expression,
+        $._type_expression,
         seq(
-          optional($.type_expression), 
+          optional($._type_expression), 
           choice("=", ":"), 
           CommaSep1($._expression)),
         ),
