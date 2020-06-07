@@ -18,9 +18,9 @@ module.exports = grammar({
     [$.switch, $.binary_expression],
     [$.parenthesis, $.parameter],
     [$.func_call, $.parameter],
-    [$.parameter, $.named_decl_expression],
+    [$.parameter, $._named_decl_expression],
     [$.trailing_return_types, $.function_header],
-    [$.trailing_return_types, $.parameter_list],
+    [$.trailing_return_types, $._parameter_list],
   ],
 
   rules: {
@@ -102,7 +102,6 @@ module.exports = grammar({
       $.push_context_statement,
       $._expression_statement,
       $.named_decl,
-      //$.directive_statement,
       $.insert_lol,
       $.operator_definition,
       $.import_statement,
@@ -127,7 +126,7 @@ module.exports = grammar({
       
 
       lambda_expression: $ => prec(-1, seq(
-        choice($.parameter_list, $.identifier),
+        choice($._parameter_list, $.identifier),
         '=>',
         field('body', choice($.imperative_scope, $._expression))
       )),
@@ -183,14 +182,14 @@ module.exports = grammar({
     struct_definition: $ => seq(
       "struct",
       optional("#XXX_temporary_no_type_info"),
-      optional($.parameter_list),
+      optional($._parameter_list),
       $.data_scope,
       optional("#no_padding")
     ),
 
     union_definition: $ => seq(
       "union",
-      optional($.parameter_list),
+      optional($._parameter_list),
       $.data_scope
     ),
 
@@ -236,7 +235,7 @@ module.exports = grammar({
         $._expression,
       )),
 
-      argument_list: $ => prec(1, seq(
+      _argument_list: $ => prec(1, seq(
         "(",
         CommaSep($.argument),
         ")",
@@ -244,7 +243,7 @@ module.exports = grammar({
 
       func_call: $ =>seq(
         $._expression,
-        $.argument_list,
+        $._argument_list,
       ),
 
       
@@ -262,13 +261,13 @@ module.exports = grammar({
       )),
 
 
-      parameter_list: $ => seq(
+      _parameter_list: $ => seq(
         '(',
           CommaSep($.parameter),
         ')'
       ),
   
-      named_decl_expression: $ => prec.left(seq(
+      _named_decl_expression: $ => prec.left(seq(
         $._expression,
         ":",
         choice(
@@ -279,13 +278,13 @@ module.exports = grammar({
       )),
 
       parameter: $ => choice(
-        $.named_decl_expression,
+        $._named_decl_expression,
         $._expression,
       ),
   
 
       function_header : $ => prec.left(seq(
-        $.parameter_list,
+        $._parameter_list,
         optional($.trailing_return_types),
         repeat($.trailing_directive)
       )),
@@ -389,14 +388,11 @@ module.exports = grammar({
         $._expression),
     )),
 
-
-
-
     named_decl: $ => prec(1, seq(
       $.names,
       ":",
       choice(
-        seq($._expression, ";"),
+        field("type", seq($._expression, ";")),
         seq($.variable_initializer, ";"),
         seq($.const_initializer, ";"),
         seq(choice(":","="), $._expression_with_block),
@@ -618,11 +614,12 @@ module.exports = grammar({
       $._expression
     )),
 
-
+/*
     directive_statement: $ => seq(
       $.compiler_directive_simple,
       $._statement
     ),
+*/
 
     if_directive: $ => prec.left(seq(
       "#if",
@@ -671,17 +668,20 @@ module.exports = grammar({
       $.named_decl
     )),
 
+    /*
     compiler_directive: $ => choice(
       $.compiler_directive_simple,
       $.compiler_directive_call,
     ),
-
-    compiler_directive_simple: $ => /\#[a-zA-Z_][a-zA-Z_0-9]*/,
+  */
+  //  compiler_directive_simple: $ => /\#[a-zA-Z_][a-zA-Z_0-9]*/,
       
+    /*
     compiler_directive_call: $ => seq(
       $.compiler_directive_simple,
       $.argument_list,
     ),
+    */
 
 
     note: $ => prec.right(choice(

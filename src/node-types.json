@@ -99,21 +99,6 @@
     }
   },
   {
-    "type": "argument_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "argument",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "argument_name",
     "named": true,
     "fields": {},
@@ -1024,25 +1009,6 @@
         },
         {
           "type": "union_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "compiler_directive_call",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "argument_list",
-          "named": true
-        },
-        {
-          "type": "compiler_directive_simple",
           "named": true
         }
       ]
@@ -2285,10 +2251,10 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "argument_list",
+          "type": "argument",
           "named": true
         },
         {
@@ -2403,10 +2369,10 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "parameter_list",
+          "type": "parameter",
           "named": true
         },
         {
@@ -3145,15 +3111,15 @@
       }
     },
     "children": {
-      "multiple": false,
-      "required": true,
+      "multiple": true,
+      "required": false,
       "types": [
         {
           "type": "identifier",
           "named": true
         },
         {
-          "type": "parameter_list",
+          "type": "parameter",
           "named": true
         }
       ]
@@ -3288,27 +3254,106 @@
   {
     "type": "named_decl",
     "named": true,
-    "fields": {},
+    "fields": {
+      "type": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ";",
+            "named": false
+          },
+          {
+            "type": "array_literal",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "built_in_type",
+            "named": true
+          },
+          {
+            "type": "cast_expression",
+            "named": true
+          },
+          {
+            "type": "enum_definition",
+            "named": true
+          },
+          {
+            "type": "expression_like_directive",
+            "named": true
+          },
+          {
+            "type": "func_call",
+            "named": true
+          },
+          {
+            "type": "function_definition",
+            "named": true
+          },
+          {
+            "type": "function_header",
+            "named": true
+          },
+          {
+            "type": "here_string",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "lambda_expression",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesis",
+            "named": true
+          },
+          {
+            "type": "scientific_notation",
+            "named": true
+          },
+          {
+            "type": "string_literal",
+            "named": true
+          },
+          {
+            "type": "struct_definition",
+            "named": true
+          },
+          {
+            "type": "ternary_expression",
+            "named": true
+          },
+          {
+            "type": "unary_operator_left",
+            "named": true
+          },
+          {
+            "type": "uninitialized_token",
+            "named": true
+          },
+          {
+            "type": "union_definition",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
       "types": [
-        {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
-          "type": "built_in_type",
-          "named": true
-        },
-        {
-          "type": "cast_expression",
-          "named": true
-        },
         {
           "type": "const_initializer",
           "named": true
@@ -3318,19 +3363,7 @@
           "named": true
         },
         {
-          "type": "expression_like_directive",
-          "named": true
-        },
-        {
-          "type": "func_call",
-          "named": true
-        },
-        {
           "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "function_header",
           "named": true
         },
         {
@@ -3338,47 +3371,11 @@
           "named": true
         },
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "lambda_expression",
-          "named": true
-        },
-        {
           "type": "names",
           "named": true
         },
         {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "parenthesis",
-          "named": true
-        },
-        {
-          "type": "scientific_notation",
-          "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
-        },
-        {
           "type": "struct_definition",
-          "named": true
-        },
-        {
-          "type": "ternary_expression",
-          "named": true
-        },
-        {
-          "type": "unary_operator_left",
-          "named": true
-        },
-        {
-          "type": "uninitialized_token",
           "named": true
         },
         {
@@ -3387,101 +3384,6 @@
         },
         {
           "type": "variable_initializer",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "named_decl_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
-          "type": "built_in_type",
-          "named": true
-        },
-        {
-          "type": "cast_expression",
-          "named": true
-        },
-        {
-          "type": "enum_definition",
-          "named": true
-        },
-        {
-          "type": "expression_like_directive",
-          "named": true
-        },
-        {
-          "type": "func_call",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "function_header",
-          "named": true
-        },
-        {
-          "type": "here_string",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "lambda_expression",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "parenthesis",
-          "named": true
-        },
-        {
-          "type": "scientific_notation",
-          "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
-        },
-        {
-          "type": "struct_definition",
-          "named": true
-        },
-        {
-          "type": "ternary_expression",
-          "named": true
-        },
-        {
-          "type": "unary_operator_left",
-          "named": true
-        },
-        {
-          "type": "uninitialized_token",
-          "named": true
-        },
-        {
-          "type": "union_definition",
           "named": true
         }
       ]
@@ -3749,10 +3651,6 @@
           "named": true
         },
         {
-          "type": "named_decl_expression",
-          "named": true
-        },
-        {
           "type": "number",
           "named": true
         },
@@ -3786,21 +3684,6 @@
         },
         {
           "type": "union_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "parameter_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "parameter",
           "named": true
         }
       ]
@@ -4929,7 +4812,7 @@
           "named": true
         },
         {
-          "type": "parameter_list",
+          "type": "parameter",
           "named": true
         }
       ]
@@ -5309,7 +5192,7 @@
           "named": true
         },
         {
-          "type": "parameter_list",
+          "type": "parameter",
           "named": true
         }
       ]
@@ -5923,10 +5806,6 @@
   {
     "type": "char",
     "named": false
-  },
-  {
-    "type": "compiler_directive_simple",
-    "named": true
   },
   {
     "type": "continue",
