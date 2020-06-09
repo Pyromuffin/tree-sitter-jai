@@ -205,7 +205,7 @@ module.exports = grammar({
       "]"
     ),
 
-    built_in_type: $ => choice(
+    built_in_type: $ => token(choice(
       'bool',
       'float32',
       'float64',
@@ -222,7 +222,7 @@ module.exports = grammar({
       'u32',
       'u64',
       'void',
-    ),
+    )),
 
 
       argument_name: $ => seq(
@@ -614,13 +614,6 @@ module.exports = grammar({
       $._expression
     )),
 
-/*
-    directive_statement: $ => seq(
-      $.compiler_directive_simple,
-      $._statement
-    ),
-*/
-
     if_directive: $ => prec.left(seq(
       "#if",
       $._expression,
@@ -667,21 +660,6 @@ module.exports = grammar({
       optional($.string_literal),
       $.named_decl
     )),
-
-    /*
-    compiler_directive: $ => choice(
-      $.compiler_directive_simple,
-      $.compiler_directive_call,
-    ),
-  */
-  //  compiler_directive_simple: $ => /\#[a-zA-Z_][a-zA-Z_0-9]*/,
-      
-    /*
-    compiler_directive_call: $ => seq(
-      $.compiler_directive_simple,
-      $.argument_list,
-    ),
-    */
 
 
     note: $ => prec.right(choice(

@@ -820,11 +820,6 @@
     }
   },
   {
-    "type": "built_in_type",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "case_statement",
     "named": true,
     "fields": {},
@@ -5788,12 +5783,12 @@
     "named": false
   },
   {
-    "type": "bool",
+    "type": "break",
     "named": false
   },
   {
-    "type": "break",
-    "named": false
+    "type": "built_in_type",
+    "named": true
   },
   {
     "type": "case",
@@ -5801,10 +5796,6 @@
   },
   {
     "type": "cast",
-    "named": false
-  },
-  {
-    "type": "char",
     "named": false
   },
   {
@@ -5844,18 +5835,6 @@
     "named": true
   },
   {
-    "type": "float",
-    "named": false
-  },
-  {
-    "type": "float32",
-    "named": false
-  },
-  {
-    "type": "float64",
-    "named": false
-  },
-  {
     "type": "for",
     "named": false
   },
@@ -5882,10 +5861,6 @@
   {
     "type": "insert_lol",
     "named": true
-  },
-  {
-    "type": "int",
-    "named": false
   },
   {
     "type": "note_simple",
@@ -5920,28 +5895,8 @@
     "named": false
   },
   {
-    "type": "s16",
-    "named": false
-  },
-  {
-    "type": "s32",
-    "named": false
-  },
-  {
-    "type": "s64",
-    "named": false
-  },
-  {
-    "type": "s8",
-    "named": false
-  },
-  {
     "type": "scientific_notation",
     "named": true
-  },
-  {
-    "type": "string",
-    "named": false
   },
   {
     "type": "struct",
@@ -5949,22 +5904,6 @@
   },
   {
     "type": "then",
-    "named": false
-  },
-  {
-    "type": "u16",
-    "named": false
-  },
-  {
-    "type": "u32",
-    "named": false
-  },
-  {
-    "type": "u64",
-    "named": false
-  },
-  {
-    "type": "u8",
     "named": false
   },
   {
@@ -5977,10 +5916,6 @@
   },
   {
     "type": "using",
-    "named": false
-  },
-  {
-    "type": "void",
     "named": false
   },
   {
