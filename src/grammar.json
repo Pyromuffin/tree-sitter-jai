@@ -62,7 +62,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "binary_expression"
+          "name": "_binary_expression"
         },
         {
           "type": "SYMBOL",
@@ -2295,7 +2295,7 @@
         ]
       }
     },
-    "binary_expression": {
+    "_binary_expression": {
       "type": "CHOICE",
       "members": [
         {
@@ -3073,7 +3073,7 @@
         }
       ]
     },
-    "load_directive": {
+    "_load_directive": {
       "type": "SEQ",
       "members": [
         {
@@ -3081,12 +3081,8 @@
           "value": "#load"
         },
         {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "string_literal"
-          }
+          "type": "SYMBOL",
+          "name": "string_literal"
         }
       ]
     },
@@ -3095,7 +3091,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "load_directive"
+          "name": "_load_directive"
         },
         {
           "type": "STRING",
@@ -3322,7 +3318,7 @@
   "conflicts": [
     [
       "switch",
-      "binary_expression"
+      "_binary_expression"
     ],
     [
       "parenthesis",

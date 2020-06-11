@@ -16,10 +16,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -60,6 +56,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -77,6 +77,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -126,10 +134,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -170,6 +174,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -187,6 +195,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -221,10 +237,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -265,6 +277,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -282,6 +298,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -316,10 +340,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -360,6 +380,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -377,6 +401,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -416,10 +448,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -519,6 +547,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -567,6 +599,14 @@
           "named": true
         },
         {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
+          "named": true
+        },
+        {
           "type": "switch_statement",
           "named": true
         },
@@ -598,7 +638,27 @@
     }
   },
   {
-    "type": "binary_expression",
+    "type": "block_comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "block_comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "block_end",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "break_statement",
     "named": true,
     "fields": {},
     "children": {
@@ -607,10 +667,6 @@
       "types": [
         {
           "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -705,121 +761,6 @@
     }
   },
   {
-    "type": "block_comment",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "block_end",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "break_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
-          "type": "built_in_type",
-          "named": true
-        },
-        {
-          "type": "cast_expression",
-          "named": true
-        },
-        {
-          "type": "enum_definition",
-          "named": true
-        },
-        {
-          "type": "expression_like_directive",
-          "named": true
-        },
-        {
-          "type": "func_call",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "function_header",
-          "named": true
-        },
-        {
-          "type": "here_string",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "lambda_expression",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "parenthesis",
-          "named": true
-        },
-        {
-          "type": "scientific_notation",
-          "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
-        },
-        {
-          "type": "struct_definition",
-          "named": true
-        },
-        {
-          "type": "ternary_expression",
-          "named": true
-        },
-        {
-          "type": "unary_operator_left",
-          "named": true
-        },
-        {
-          "type": "uninitialized_token",
-          "named": true
-        },
-        {
-          "type": "union_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "case_statement",
     "named": true,
     "fields": {},
@@ -832,10 +773,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -876,6 +813,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -893,6 +834,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -927,10 +876,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -971,6 +916,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -988,6 +937,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1022,10 +979,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -1066,6 +1019,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -1083,6 +1040,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1117,10 +1082,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -1161,6 +1122,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -1178,6 +1143,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1217,10 +1190,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -1324,6 +1293,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -1369,6 +1342,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1420,10 +1401,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -1523,6 +1500,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -1568,6 +1549,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1637,10 +1626,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "break_statement",
           "named": true
         },
@@ -1737,6 +1722,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -1782,6 +1771,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1833,10 +1830,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -1881,6 +1874,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -1898,6 +1895,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -1937,10 +1942,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -2044,6 +2045,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -2096,6 +2101,14 @@
           "named": true
         },
         {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
+          "named": true
+        },
+        {
           "type": "switch_statement",
           "named": true
         },
@@ -2139,10 +2152,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -2183,6 +2192,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -2200,6 +2213,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -2257,10 +2278,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -2301,6 +2318,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -2318,6 +2339,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -2402,10 +2431,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "break_statement",
           "named": true
         },
@@ -2506,6 +2531,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -2551,6 +2580,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -2605,10 +2642,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "break_statement",
           "named": true
         },
@@ -2709,6 +2742,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -2754,6 +2791,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -2805,10 +2850,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -2912,6 +2953,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -2957,6 +3002,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3015,11 +3068,75 @@
         "required": true,
         "types": [
           {
-            "type": "array_literal",
-            "named": true
+            "type": "!=",
+            "named": false
           },
           {
-            "type": "binary_expression",
+            "type": "#align",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": ">>",
+            "named": false
+          },
+          {
+            "type": "^",
+            "named": false
+          },
+          {
+            "type": "array_literal",
             "named": true
           },
           {
@@ -3067,6 +3184,10 @@
             "named": true
           },
           {
+            "type": "member_access",
+            "named": true
+          },
+          {
             "type": "number",
             "named": true
           },
@@ -3087,6 +3208,14 @@
             "named": true
           },
           {
+            "type": "subscript",
+            "named": true
+          },
+          {
+            "type": "switch",
+            "named": true
+          },
+          {
             "type": "ternary_expression",
             "named": true
           },
@@ -3101,6 +3230,14 @@
           {
             "type": "union_definition",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
@@ -3121,22 +3258,6 @@
     }
   },
   {
-    "type": "load_directive",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "load_statement",
     "named": true,
     "fields": {},
@@ -3145,7 +3266,7 @@
       "required": true,
       "types": [
         {
-          "type": "load_directive",
+          "type": "string_literal",
           "named": true
         }
       ]
@@ -3161,10 +3282,6 @@
       "types": [
         {
           "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -3208,6 +3325,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -3225,6 +3346,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3255,15 +3384,79 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "#align",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
             "type": ";",
             "named": false
           },
           {
-            "type": "array_literal",
-            "named": true
+            "type": "<",
+            "named": false
           },
           {
-            "type": "binary_expression",
+            "type": "<<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": ">>",
+            "named": false
+          },
+          {
+            "type": "^",
+            "named": false
+          },
+          {
+            "type": "array_literal",
             "named": true
           },
           {
@@ -3307,6 +3500,10 @@
             "named": true
           },
           {
+            "type": "member_access",
+            "named": true
+          },
+          {
             "type": "number",
             "named": true
           },
@@ -3327,6 +3524,14 @@
             "named": true
           },
           {
+            "type": "subscript",
+            "named": true
+          },
+          {
+            "type": "switch",
+            "named": true
+          },
+          {
             "type": "ternary_expression",
             "named": true
           },
@@ -3341,6 +3546,14 @@
           {
             "type": "union_definition",
             "named": true
+          },
+          {
+            "type": "|",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
@@ -3397,10 +3610,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -3441,6 +3650,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -3458,6 +3671,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3492,10 +3713,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -3536,6 +3753,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -3553,6 +3774,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3602,10 +3831,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -3646,6 +3871,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -3663,6 +3892,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3697,10 +3934,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -3741,6 +3974,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -3758,6 +3995,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -3819,10 +4064,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "break_statement",
           "named": true
         },
@@ -3919,6 +4160,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -3964,6 +4209,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4010,10 +4263,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -4054,6 +4303,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -4071,6 +4324,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4105,10 +4366,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -4149,6 +4406,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -4166,6 +4427,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4200,10 +4469,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -4244,6 +4509,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -4261,6 +4530,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4295,10 +4572,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -4339,6 +4612,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_return",
           "named": true
         },
@@ -4360,6 +4637,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4399,10 +4684,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -4502,6 +4783,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -4547,6 +4832,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4601,10 +4894,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "break_statement",
           "named": true
         },
@@ -4701,6 +4990,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -4746,6 +5039,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4826,10 +5127,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -4870,6 +5167,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -4887,6 +5188,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -4918,10 +5227,6 @@
       "types": [
         {
           "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -4969,6 +5274,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -4986,6 +5295,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -5035,10 +5352,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -5079,6 +5392,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -5096,6 +5413,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -5206,10 +5531,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -5250,6 +5571,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -5271,6 +5596,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -5305,10 +5638,6 @@
           "named": true
         },
         {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
           "type": "built_in_type",
           "named": true
         },
@@ -5349,6 +5678,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -5366,6 +5699,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {
@@ -5405,10 +5746,6 @@
         },
         {
           "type": "backtick_statement",
-          "named": true
-        },
-        {
-          "type": "binary_expression",
           "named": true
         },
         {
@@ -5508,6 +5845,10 @@
           "named": true
         },
         {
+          "type": "member_access",
+          "named": true
+        },
+        {
           "type": "named_decl",
           "named": true
         },
@@ -5553,6 +5894,14 @@
         },
         {
           "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
           "named": true
         },
         {

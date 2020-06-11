@@ -15,7 +15,7 @@ module.exports = grammar({
   externals: $ => [$.here_string],
 
   conflicts: $ =>[
-    [$.switch, $.binary_expression],
+    [$.switch, $._binary_expression],
     [$.parenthesis, $.parameter],
     [$.func_call, $.parameter],
     [$.parameter, $._named_decl_expression],
@@ -46,7 +46,7 @@ module.exports = grammar({
       $.number,
       $.scientific_notation,
       $.string_literal,
-      $.binary_expression,
+      $._binary_expression,
       $._unary_expression,
       $.cast_expression,
       $.parenthesis,
@@ -535,7 +535,7 @@ module.exports = grammar({
           ),
     ))),
 
-    binary_expression: $ => choice(
+    _binary_expression: $ => choice(
       $.member_access,
       $.subscript,
       $.switch,
@@ -634,13 +634,13 @@ module.exports = grammar({
       $._statement
     ),
 
-    load_directive: $ => seq(
+    _load_directive: $ => seq(
     "#load",
-    field("name", $.string_literal)
+    $.string_literal,
     ),
 
     load_statement: $ => seq(
-      $.load_directive,
+      $._load_directive,
       ";"
     ),
 
