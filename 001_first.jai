@@ -1,7 +1,7 @@
-main :: () {
 
-    print();
+
+main :: () {
+    a
+    zebra :: 100;
 }
 
-// tomato
-#import "Basic";

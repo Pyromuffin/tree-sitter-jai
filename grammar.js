@@ -535,6 +535,7 @@ module.exports = grammar({
           ),
     ))),
 
+
     _binary_expression: $ => choice(
       $.member_access,
       $.subscript,

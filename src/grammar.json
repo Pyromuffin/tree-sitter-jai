@@ -1562,12 +1562,21 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "SYMBOL",
-            "name": "names"
-          },
-          {
-            "type": "STRING",
-            "value": ":"
+            "type": "PREC_RIGHT",
+            "value": 0,
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "names"
+                },
+                {
+                  "type": "STRING",
+                  "value": ":"
+                }
+              ]
+            }
           },
           {
             "type": "CHOICE",
