@@ -37,7 +37,6 @@ module.exports = grammar({
         "#line",
         "#filepath",
         "#through",
-        "#assert",
       )),
 
 
@@ -112,6 +111,7 @@ module.exports = grammar({
       $.imperative_scope,
       $.run_statement,
       $._type_definition,
+      $.assert_directive,
     ),
 
     _expression_statement: $ => seq( $._expression, ";"),
@@ -166,6 +166,14 @@ module.exports = grammar({
       $._statement
     ),
 
+
+    assert_directive: $ =>
+    seq(
+        "#assert",
+      $._expression,
+      optional($.string_literal),
+      ";",
+    ),
 
     file_scope_directive: $ =>
       '#scope_file',

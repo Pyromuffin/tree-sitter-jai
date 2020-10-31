@@ -37,10 +37,6 @@
           {
             "type": "STRING",
             "value": "#through"
-          },
-          {
-            "type": "STRING",
-            "value": "#assert"
           }
         ]
       }
@@ -295,6 +291,10 @@
         {
           "type": "SYMBOL",
           "name": "_type_definition"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "assert_directive"
         }
       ]
     },
@@ -507,6 +507,35 @@
         {
           "type": "SYMBOL",
           "name": "_statement"
+        }
+      ]
+    },
+    "assert_directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#assert"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expression"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "string_literal"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
         }
       ]
     },
@@ -1562,21 +1591,12 @@
         "type": "SEQ",
         "members": [
           {
-            "type": "PREC_RIGHT",
-            "value": 0,
-            "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "names"
-                },
-                {
-                  "type": "STRING",
-                  "value": ":"
-                }
-              ]
-            }
+            "type": "SYMBOL",
+            "name": "names"
+          },
+          {
+            "type": "STRING",
+            "value": ":"
           },
           {
             "type": "CHOICE",

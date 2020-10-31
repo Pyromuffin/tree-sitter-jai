@@ -328,6 +328,109 @@
     }
   },
   {
+    "type": "assert_directive",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "built_in_type",
+          "named": true
+        },
+        {
+          "type": "cast_expression",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "expression_like_directive",
+          "named": true
+        },
+        {
+          "type": "func_call",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "function_header",
+          "named": true
+        },
+        {
+          "type": "here_string",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "lambda_expression",
+          "named": true
+        },
+        {
+          "type": "member_access",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parenthesis",
+          "named": true
+        },
+        {
+          "type": "scientific_notation",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "switch",
+          "named": true
+        },
+        {
+          "type": "ternary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_operator_left",
+          "named": true
+        },
+        {
+          "type": "uninitialized_token",
+          "named": true
+        },
+        {
+          "type": "union_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "assignment",
     "named": true,
     "fields": {},
@@ -440,6 +543,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -1185,6 +1292,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -1393,6 +1504,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -1615,6 +1730,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -1934,6 +2053,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -2423,6 +2546,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -2634,6 +2761,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -2842,6 +2973,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -3064,7 +3199,7 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -4056,6 +4191,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -4679,6 +4818,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -4883,6 +5026,10 @@
       "types": [
         {
           "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "assert_directive",
           "named": true
         },
         {
@@ -5741,6 +5888,10 @@
           "named": true
         },
         {
+          "type": "assert_directive",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -5953,6 +6104,10 @@
   },
   {
     "type": "#align",
+    "named": false
+  },
+  {
+    "type": "#assert",
     "named": false
   },
   {
