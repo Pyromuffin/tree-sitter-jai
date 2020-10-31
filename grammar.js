@@ -62,7 +62,10 @@ module.exports = grammar({
       $.expression_like_directive,
       $.ternary_expression,
       $.function_header,
-      $.struct_literal,
+      $.implicit_struct_literal,
+      $.typed_struct_literal,
+      $.implicit_compile_time_array_literal,
+      $.typed_compile_time_array_literal,
     ),
 
     parenthesis: $ => seq(
@@ -206,14 +209,31 @@ module.exports = grammar({
         $._expression,
       ),
 
-    struct_literal: $ => prec(1, seq( // precedence over identifier
-      optional($.identifier),
-      ".{",
+    typed_struct_literal: $ => prec(5, seq( // precedence over member access
+        $._expression,
+        ".","{",
+        CommaSep($._struct_literal_arg),
+          "}"
+      )),
+
+    implicit_struct_literal: $ => prec(1, seq( // precedence over unary left .
+      ".","{",
       CommaSep($._struct_literal_arg),
         "}"
     )),
 
+    typed_compile_time_array_literal: $ => prec(5, seq( // precedence over member access
+      $._expression,
+      ".", "[",
+      CommaSep($._expression),
+        "]"
+    )),
 
+    implicit_compile_time_array_literal: $ => prec(1, seq( 
+      ".", "[",
+      CommaSep($._expression),
+        "]"
+    )),
 
     union_definition: $ => seq(
       "union",
