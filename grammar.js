@@ -41,6 +41,9 @@ module.exports = grammar({
 
 
 
+    
+
+
     _expression: $ => choice(
       $.number,
       $.scientific_notation,
@@ -58,7 +61,8 @@ module.exports = grammar({
       $.lambda_expression,
       $.expression_like_directive,
       $.ternary_expression,
-      $.function_header
+      $.function_header,
+      $.struct_literal,
     ),
 
     parenthesis: $ => seq(
@@ -97,7 +101,7 @@ module.exports = grammar({
       $.backtick_statement,
       $.remove_statement,
       $.empty_statement,
-      $.assignment,
+      $.assignment_statement,
       $.push_context_statement,
       $._expression_statement,
       $.named_decl,
@@ -194,6 +198,22 @@ module.exports = grammar({
       $.data_scope,
       optional("#no_padding")
     ),
+
+    
+      _struct_literal_arg: $ => seq(
+        optional(seq($._expression,
+        "=")),
+        $._expression,
+      ),
+
+    struct_literal: $ => prec(1, seq( // precedence over identifier
+      optional($.identifier),
+      ".{",
+      CommaSep($._struct_literal_arg),
+        "}"
+    )),
+
+
 
     union_definition: $ => seq(
       "union",
@@ -429,7 +449,7 @@ module.exports = grammar({
           "%=",
       )),
 
-    assignment: $ => seq(
+    assignment_statement: $ => seq(
       CommaSep1($._expression),
       $._assignment_operator, 
       CommaSep1($._expression),
