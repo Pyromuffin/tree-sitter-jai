@@ -170,6 +170,10 @@
         {
           "type": "SYMBOL",
           "name": "union_definition"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "here_string"
         }
       ]
     },

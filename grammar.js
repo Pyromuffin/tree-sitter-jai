@@ -88,7 +88,7 @@ module.exports = grammar({
       $.enum_definition,
       $.struct_definition,
       $.union_definition,
-      //$.here_string,
+      $.here_string,
     ),
 
     _type_definition: $ => prec(1, choice(

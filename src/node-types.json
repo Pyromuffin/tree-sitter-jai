@@ -44,6 +44,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -140,6 +144,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -246,6 +254,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -342,6 +354,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -591,6 +607,10 @@
             "named": true
           },
           {
+            "type": "here_string",
+            "named": true
+          },
+          {
             "type": "identifier",
             "named": true
           },
@@ -686,6 +706,10 @@
           },
           {
             "type": "function_definition",
+            "named": true
+          },
+          {
+            "type": "here_string",
             "named": true
           },
           {
@@ -797,6 +821,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -931,6 +959,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1027,6 +1059,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -1129,6 +1165,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1228,6 +1268,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1324,6 +1368,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -1430,6 +1478,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1526,6 +1578,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -1743,6 +1799,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "note",
           "named": true
         },
@@ -1803,6 +1863,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -2214,6 +2278,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -2362,6 +2430,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -2525,6 +2597,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -2740,6 +2816,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -2952,6 +3032,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -3257,6 +3341,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -3353,6 +3441,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -3468,6 +3560,10 @@
           },
           {
             "type": "function_definition",
+            "named": true
+          },
+          {
+            "type": "here_string",
             "named": true
           },
           {
@@ -3604,6 +3700,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -3704,6 +3804,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -3864,6 +3968,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -4037,6 +4145,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -4200,6 +4312,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -4299,6 +4415,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -4395,6 +4515,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -4801,6 +4925,10 @@
           "named": true
         },
         {
+          "type": "here_string",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -4897,6 +5025,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -5015,6 +5147,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -5194,6 +5330,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -5406,6 +5546,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "here_string",
           "named": true
         },
         {
@@ -5770,6 +5914,10 @@
   {
     "type": "for",
     "named": false
+  },
+  {
+    "type": "here_string",
+    "named": true
   },
   {
     "type": "identifier",
