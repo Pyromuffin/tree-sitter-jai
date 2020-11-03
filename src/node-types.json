@@ -48,6 +48,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -136,6 +144,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -234,6 +250,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -322,6 +346,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -559,6 +591,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -634,33 +674,6 @@
     "fields": {}
   },
   {
-    "type": "block_initializer",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "enum_definition",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "struct_definition",
-          "named": true
-        },
-        {
-          "type": "union_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "break_statement",
     "named": true,
     "fields": {},
@@ -706,6 +719,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -800,6 +821,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -891,6 +920,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -979,6 +1016,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -1077,6 +1122,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -1168,6 +1221,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -1256,6 +1317,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -1449,7 +1518,15 @@
       "required": true,
       "types": [
         {
-          "type": "implicit_block_decl",
+          "type": "declarer",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "function_definition",
           "named": true
         },
         {
@@ -1457,7 +1534,15 @@
           "named": true
         },
         {
-          "type": "typed_block_decl",
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "type_instantiation",
+          "named": true
+        },
+        {
+          "type": "union_definition",
           "named": true
         }
       ]
@@ -1509,6 +1594,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -1912,6 +2005,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -2067,6 +2168,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "import_statement",
           "named": true
         },
@@ -2207,6 +2316,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -2426,6 +2543,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "import_statement",
           "named": true
         },
@@ -2630,6 +2755,14 @@
         },
         {
           "type": "imperative_scope",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -2867,66 +3000,12 @@
     }
   },
   {
-    "type": "implicit_block_decl",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block_initializer",
-          "named": true
-        },
-        {
-          "type": "declarer",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "implicit_named_decl",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "declarer",
-          "named": true
-        },
-        {
-          "type": "initializer",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "import_statement",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "initializer",
+    "type": "implicit_compile_time_array_literal",
     "named": true,
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "array_literal",
@@ -2966,6 +3045,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -3009,6 +3096,121 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "implicit_struct_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "built_in_type",
+          "named": true
+        },
+        {
+          "type": "cast_expression",
+          "named": true
+        },
+        {
+          "type": "code_directive",
+          "named": true
+        },
+        {
+          "type": "comma_separated_args",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "expression_like_directive",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
+          "type": "lambda_expression",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parenthesis",
+          "named": true
+        },
+        {
+          "type": "scientific_notation",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "ternary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "uninitialized_token",
+          "named": true
+        },
+        {
+          "type": "union_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "import_statement",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "string_literal",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -3061,6 +3263,14 @@
           },
           {
             "type": "imperative_scope",
+            "named": true
+          },
+          {
+            "type": "implicit_compile_time_array_literal",
+            "named": true
+          },
+          {
+            "type": "implicit_struct_literal",
             "named": true
           },
           {
@@ -3185,6 +3395,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -3251,7 +3469,59 @@
       "required": true,
       "types": [
         {
-          "type": "implicit_named_decl",
+          "type": "array_literal",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "built_in_type",
+          "named": true
+        },
+        {
+          "type": "cast_expression",
+          "named": true
+        },
+        {
+          "type": "code_directive",
+          "named": true
+        },
+        {
+          "type": "comma_separated_args",
+          "named": true
+        },
+        {
+          "type": "declarer",
+          "named": true
+        },
+        {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "expression_like_directive",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
+          "type": "lambda_expression",
           "named": true
         },
         {
@@ -3259,7 +3529,43 @@
           "named": true
         },
         {
-          "type": "typed_named_decl",
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parenthesis",
+          "named": true
+        },
+        {
+          "type": "scientific_notation",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
+        },
+        {
+          "type": "ternary_expression",
+          "named": true
+        },
+        {
+          "type": "type_instantiation",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        },
+        {
+          "type": "uninitialized_token",
+          "named": true
+        },
+        {
+          "type": "union_definition",
           "named": true
         }
       ]
@@ -3364,6 +3670,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -3552,6 +3866,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "import_statement",
           "named": true
         },
@@ -3695,6 +4017,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -3786,6 +4116,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -3874,6 +4212,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -4272,6 +4618,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -4364,6 +4718,14 @@
         },
         {
           "type": "imperative_scope",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -4473,6 +4835,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "lambda_expression",
           "named": true
         },
@@ -4554,25 +4924,6 @@
     }
   },
   {
-    "type": "type_declaration",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "declarer",
-          "named": true
-        },
-        {
-          "type": "type_instantiation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "type_instantiation",
     "named": true,
     "fields": {},
@@ -4594,44 +4945,6 @@
         },
         {
           "type": "unary_operator_left",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "typed_block_decl",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block_initializer",
-          "named": true
-        },
-        {
-          "type": "type_declaration",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "typed_named_decl",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "initializer",
-          "named": true
-        },
-        {
-          "type": "type_declaration",
           "named": true
         }
       ]
@@ -4683,6 +4996,14 @@
         },
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
           "named": true
         },
         {
@@ -4902,6 +5223,14 @@
           "named": true
         },
         {
+          "type": "implicit_compile_time_array_literal",
+          "named": true
+        },
+        {
+          "type": "implicit_struct_literal",
+          "named": true
+        },
+        {
           "type": "import_statement",
           "named": true
         },
@@ -5038,6 +5367,10 @@
   },
   {
     "type": "#load",
+    "named": false
+  },
+  {
+    "type": "#must",
     "named": false
   },
   {

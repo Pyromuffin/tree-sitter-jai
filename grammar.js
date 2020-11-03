@@ -61,9 +61,9 @@ module.exports = grammar({
       $.comma_separated_args,
 
       // these guys add 500kb
-    //  $.implicit_struct_literal, 
+      $.implicit_struct_literal, 
       //$.typed_struct_literal,
-    //  $.implicit_compile_time_array_literal,
+      $.implicit_compile_time_array_literal,
       //$.typed_compile_time_array_literal,
 
       // $.named_decl, // adds 700 kb
@@ -297,10 +297,10 @@ module.exports = grammar({
       ),
   
       // so if we dont have a special rule for what can go into a function header, then we end up parsing (1 + 2) as a function header.
-      parameter: $ => prec(0, choice(
+      parameter: $ => prec(0, seq( choice(
         $.named_decl,
-        $.type_instantiation
-      )),
+        $.type_instantiation),
+        )),
 
 
       parenthesized_returns: $ => prec(1, seq(
@@ -406,47 +406,47 @@ module.exports = grammar({
       ":",
     ),
 
-    initializer: $ =>prec.left( seq(
+    _initializer: $ =>prec.left( seq(
       choice(":", "="), $._expression 
     )),
 
-    block_initializer: $ =>prec(1, seq(
+    _block_initializer: $ =>prec(1, seq(
       choice(":", "="), $._expression_with_block 
     )),
   
-    type_declaration: $ =>seq(
+    _type_declaration: $ =>seq(
       $.declarer,
       $.type_instantiation
     ),
     
-    typed_named_decl: $=>prec.left(seq(
-        $.type_declaration, optional($.initializer),
+    _typed_named_decl: $=>prec.left(seq(
+        $._type_declaration, optional($._initializer),
     )),
 
-    implicit_named_decl: $=>prec.left(seq(
-      $.declarer, $.initializer,
+    _implicit_named_decl: $=>prec.left(seq(
+      $.declarer, $._initializer,
     )),
 
     named_decl: $=> prec.left(seq(
       choice(
-        $.implicit_named_decl,
-        $.typed_named_decl),
+        $._implicit_named_decl,
+        $._typed_named_decl),
       repeat($.note)
     )),
 
 
-    typed_block_decl: $=> prec(1, seq(
-      $.type_declaration, optional($.block_initializer),
+    _typed_block_decl: $=> prec(1, seq(
+      $._type_declaration, $._block_initializer,
     )),
 
-    implicit_block_decl: $=> seq(
-      $.declarer, $.block_initializer,
+    _implicit_block_decl: $=> seq(
+      $.declarer, $._block_initializer,
     ),
    
     declaration_with_block: $=>prec(1, seq(
       choice(
-        $.implicit_block_decl,
-        $.typed_block_decl),
+        $._implicit_block_decl,
+        $._typed_block_decl),
       repeat($.note)
     )),
 
@@ -455,8 +455,9 @@ module.exports = grammar({
 
      type_instantiation: $ => prec.left(
       seq(
-        repeat(prec.right( $.unary_operator_left)),
+        repeat(prec(10,$.unary_operator_left)),
         choice($.identifier, $.built_in_type, $.function_header), // this can be a lambda type, array, pointer_to, or type, or even a member expression
+        optional("#must")
       )), 
 
 
@@ -563,7 +564,7 @@ module.exports = grammar({
 
     member_access: $ => prec.left(4, seq($._expression, '.', $._expression)),
     subscript: $ => prec.left(4, seq($._expression, '[', $._expression, "]")),
-    call: $ => prec.left(-5, seq($._expression, '(', optional($._expression), ")")),
+    call: $ => prec.left(4, seq($._expression, '(', optional($._expression), ")")),
     switch: $ => prec.right( seq( $._expression, "==", $.imperative_scope)),
 
     foreign_directive: $ => prec.left(seq(
@@ -588,7 +589,7 @@ module.exports = grammar({
       "%=",
   )),
 
-  assignment: $ => prec.right(-5, seq(
+  assignment: $ => prec.right(3, seq(
     $._expression,
     $._assignment_operator, 
     $._expression,
@@ -597,7 +598,7 @@ module.exports = grammar({
 
     _tokens_high_precedence: $ => 
     token(choice(
-      "==",
+      //"==",
       "!=",
       "||",
       "&&",
@@ -616,6 +617,7 @@ module.exports = grammar({
       $.assignment,
       $.call,
       prec.left(3, seq($._expression, ".", "[", $._expression, "]")),
+      prec.left(3, seq($._expression, "==", $._expression)),
       prec.left(3, seq($._expression, $._tokens_high_precedence, $._expression)),
       prec.left(2, seq($._expression, '&', $._expression)),
       prec.left(2, seq($._expression, '|', $._expression)),
