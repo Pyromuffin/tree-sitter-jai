@@ -118,6 +118,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "function_header"
+        },
+        {
+          "type": "SYMBOL",
           "name": "built_in_type"
         }
       ]
@@ -1578,46 +1582,8 @@
       }
     },
     "type_instantiation": {
-      "type": "PREC_LEFT",
-      "value": 0,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "identifier"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "built_in_type"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "function_header"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "type_operator"
-              }
-            ]
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "#must"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
-      }
+      "type": "SYMBOL",
+      "name": "_expression"
     },
     "using_statement": {
       "type": "PREC",
@@ -3182,10 +3148,6 @@
       "binary_expression"
     ],
     [
-      "_expression",
-      "type_instantiation"
-    ],
-    [
       "parenthesis",
       "parameter"
     ]
@@ -3196,7 +3158,9 @@
       "name": "here_string"
     }
   ],
-  "inline": [],
+  "inline": [
+    "type_instantiation"
+  ],
   "supertypes": []
 }
 

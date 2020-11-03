@@ -1,7 +1,7 @@
 module.exports = grammar({
   name: 'jai',
   //inline: $ => [$.note_simple, $.number],
-  //inline: $ => [$.parameter],
+  inline: $ => [$.type_instantiation],
   extras: $ =>
    [
     $.inline_comment,
@@ -16,7 +16,7 @@ module.exports = grammar({
     [$.switch, $.binary_expression],
     //[$.parenthesized_trailing_return_types, $.unparenthesized_trailing_return_types],
     //[$.trailing_return_types, $.function_header],
-    [$._expression, $.type_instantiation],
+    //[$._expression, $.type_instantiation],
     [$.parenthesis, $.parameter],
   ],
 
@@ -68,7 +68,7 @@ module.exports = grammar({
       //$.typed_compile_time_array_literal,
 
       // $.named_decl, // adds 700 kb
-      // $.function_header,
+       $.function_header,
 
       // hahahah this goes from 2 mb to 7 mb
       //prec(-1, $.type_instantiation),
@@ -440,12 +440,12 @@ module.exports = grammar({
       $.type_instantiation
      )),
 
-     type_instantiation: $ => prec.left(
+     type_instantiation: $ => $._expression, /*prec.left(
       seq(
         choice($.identifier, $.built_in_type, $.function_header, $.type_operator), // this can be a lambda type, array, pointer_to, or type, or even a member expression
         optional("#must")
       )), 
-
+*/
 
 
     using_statement: $ => prec(1, seq( // precedence over unary using
