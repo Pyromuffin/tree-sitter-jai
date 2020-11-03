@@ -17,6 +17,7 @@ module.exports = grammar({
     //[$.parenthesized_trailing_return_types, $.unparenthesized_trailing_return_types],
     //[$.trailing_return_types, $.function_header],
     [$._expression, $.type_instantiation],
+    [$.parenthesis, $.parameter],
   ],
 
   rules: {
@@ -77,7 +78,7 @@ module.exports = grammar({
 
     parenthesis: $ => prec(0, seq( // lower than trailing return types
       "(",
-      $._expression, // not optional as an expression!
+      choice($._expression, $.type_instantiation), // not optional as an expression!
       ")",
     )),
     
@@ -215,29 +216,11 @@ module.exports = grammar({
     ),
 
     
-   
-    typed_struct_literal: $ => prec(5, seq( // precedence over member access
-        $.type_instantiation,
-        "." , "{",
-          optional($._expression),
-          "}"
-      )),
-
     implicit_struct_literal: $ => prec(1, seq( // precedence over unary left .
       "." , "{",
       optional($._expression),
         "}"
     )),
-
- 
-    /*
-    typed_compile_time_array_literal: $ => prec(5, seq( // precedence over member access
-      $.type_instantiation,
-      $.array_literal_op,
-      optional($._expression),
-        "]"
-    )),
-    */
 
     implicit_compile_time_array_literal: $ => prec(1, seq( 
       ".", "[",
@@ -303,7 +286,7 @@ module.exports = grammar({
         )),
 
 
-      parenthesized_returns: $ => prec(1, seq(
+      _parenthesized_returns: $ => prec(1, seq(
         "(",
         $.parameter,
         repeat(seq(",", $.parameter)),
@@ -311,7 +294,7 @@ module.exports = grammar({
       )),
 
 
-      naked_returns: $ => prec.left(seq(
+      _naked_returns: $ => prec.left(seq(
           $.parameter,
           repeat(seq(",", $.parameter)),
       )),
@@ -319,8 +302,8 @@ module.exports = grammar({
       trailing_return_types: $ =>prec.right( seq( // higher than parameter list
         "->", 
         choice(
-          $.parenthesized_returns,
-          $.naked_returns,
+          $._parenthesized_returns,
+          $._naked_returns,
           ),
       )),
 
@@ -616,7 +599,8 @@ module.exports = grammar({
       $.switch,
       $.assignment,
       $.call,
-      prec.left(3, seq($._expression, ".", "[", $._expression, "]")),
+      field("struct_literal", prec.left(3, seq($._expression, ".", "{", optional($._expression), "}"))),
+      field("array_literal", prec.left(3, seq($._expression, ".", "[", optional($._expression), "]"))),
       prec.left(3, seq($._expression, "==", $._expression)),
       prec.left(3, seq($._expression, $._tokens_high_precedence, $._expression)),
       prec.left(2, seq($._expression, '&', $._expression)),
