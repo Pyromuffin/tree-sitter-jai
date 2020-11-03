@@ -999,20 +999,15 @@
       "type": "PREC",
       "value": 0,
       "content": {
-        "type": "SEQ",
+        "type": "CHOICE",
         "members": [
           {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "named_decl"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "type_instantiation"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "named_decl"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_instantiation"
           }
         ]
       }
@@ -1561,23 +1556,29 @@
         ]
       }
     },
+    "type_operator": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "unary_operator_left"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "type_instantiation"
+          }
+        ]
+      }
+    },
     "type_instantiation": {
       "type": "PREC_LEFT",
       "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
-          {
-            "type": "REPEAT",
-            "content": {
-              "type": "PREC",
-              "value": 10,
-              "content": {
-                "type": "SYMBOL",
-                "name": "unary_operator_left"
-              }
-            }
-          },
           {
             "type": "CHOICE",
             "members": [
@@ -1592,6 +1593,10 @@
               {
                 "type": "SYMBOL",
                 "name": "function_header"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "type_operator"
               }
             ]
           },
@@ -1944,6 +1949,10 @@
         {
           "type": "STRING",
           "value": "$"
+        },
+        {
+          "type": "STRING",
+          "value": "$$"
         },
         {
           "type": "STRING",
@@ -3109,7 +3118,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "\\$?[a-zA-Z_][a-zA-Z_0-9]*"
+      "value": "[a-zA-Z_][a-zA-Z_0-9]*"
     },
     "number": {
       "type": "PATTERN",

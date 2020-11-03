@@ -280,10 +280,11 @@ module.exports = grammar({
       ),
   
       // so if we dont have a special rule for what can go into a function header, then we end up parsing (1 + 2) as a function header.
-      parameter: $ => prec(0, seq( choice(
-        $.named_decl,
-        $.type_instantiation),
-        )),
+      parameter: $ => prec(0, 
+        choice(
+          $.named_decl,
+          $.type_instantiation),
+        ),
 
 
       _parenthesized_returns: $ => prec(1, seq(
@@ -434,12 +435,14 @@ module.exports = grammar({
     )),
 
 
-     
+     type_operator: $ => prec.right( seq(
+      $.unary_operator_left,
+      $.type_instantiation
+     )),
 
      type_instantiation: $ => prec.left(
       seq(
-        repeat(prec(10,$.unary_operator_left)),
-        choice($.identifier, $.built_in_type, $.function_header), // this can be a lambda type, array, pointer_to, or type, or even a member expression
+        choice($.identifier, $.built_in_type, $.function_header, $.type_operator), // this can be a lambda type, array, pointer_to, or type, or even a member expression
         optional("#must")
       )), 
 
@@ -530,7 +533,7 @@ module.exports = grammar({
     )),
 
     unary_operator_left: $ => choice(
-    "-", "+", "!", "*", "<<", "~", "xx", "xx,no_check", "$", 
+    "-", "+", "!", "*", "<<", "~", "xx", "xx,no_check", "$", "$$", 
      "inline", "using",  "..", ".",
       $.array_decl,
       $.relative_pointer,
@@ -723,7 +726,7 @@ module.exports = grammar({
       ")",
     )),
 
-    identifier: $ => /\$?[a-zA-Z_][a-zA-Z_0-9]*/,
+    identifier: $ => /[a-zA-Z_][a-zA-Z_0-9]*/,
 
     number: $ => /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
     
