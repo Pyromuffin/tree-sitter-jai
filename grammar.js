@@ -1,7 +1,7 @@
 module.exports = grammar({
   name: 'jai',
   //inline: $ => [$.note_simple, $.number],
-  inline: $ => [$.type_instantiation],
+  //inline: $ => [$.type_instantiation],
   extras: $ =>
    [
     $.inline_comment,
@@ -16,8 +16,8 @@ module.exports = grammar({
     [$.switch, $.binary_expression],
     //[$.parenthesized_trailing_return_types, $.unparenthesized_trailing_return_types],
     //[$.trailing_return_types, $.function_header],
-    //[$._expression, $.type_instantiation],
-    [$.parenthesis, $.parameter],
+    [$._expression, $.type_instantiation],
+    //[$.parenthesis, $.parameter],
   ],
 
   rules: {
@@ -61,6 +61,7 @@ module.exports = grammar({
       $.code_directive,
       $.comma_separated_args,
 
+
       // these guys add 500kb
       $.implicit_struct_literal, 
       //$.typed_struct_literal,
@@ -68,7 +69,7 @@ module.exports = grammar({
       //$.typed_compile_time_array_literal,
 
       // $.named_decl, // adds 700 kb
-       $.function_header,
+      // $.function_header,
 
       // hahahah this goes from 2 mb to 7 mb
       //prec(-1, $.type_instantiation),
@@ -78,7 +79,7 @@ module.exports = grammar({
 
     parenthesis: $ => prec(0, seq( // lower than trailing return types
       "(",
-      choice($._expression, $.type_instantiation), // not optional as an expression!
+      $._expression, // not optional as an expression!
       ")",
     )),
     
@@ -115,7 +116,6 @@ module.exports = grammar({
       $.push_context_statement,
       $.expression_statement,
       $.declaration_with_block,
-      $.insert_lol,
       $.operator_definition,
       $.import_statement,
       $.file_scope_directive,
@@ -138,10 +138,12 @@ module.exports = grammar({
         '*/'
       ),
 
+
+      lambda_header: $ => choice($._parameter_list, $.identifier),
       
 
-      lambda_expression: $ => prec(-1, seq(
-        choice($._parameter_list, $.identifier),
+      lambda_expression: $ => prec.left( seq(
+        $.lambda_header,
         '=>',
         field('body', choice($.imperative_scope, $._expression))
       )),
@@ -209,7 +211,8 @@ module.exports = grammar({
 
     struct_definition: $ => seq(
       "struct",
-      optional("#XXX_temporary_no_type_info"),
+      optional("#type_info_none"),
+      optional("#type_info_procedures_are_void_pointers"),
       optional($._parameter_list),
       $.data_scope,
       optional("#no_padding")
@@ -435,17 +438,23 @@ module.exports = grammar({
     )),
 
 
-     type_operator: $ => prec.right( seq(
+
+    binary_type_operator: $ => prec(1, choice(
+      $.call,
+      $.member_access,
+      $.subscript,
+    )),
+
+     type_operator: $ => prec.right(0, seq(
       $.unary_operator_left,
-      $.type_instantiation
+      $.type_instantiation,
      )),
 
-     type_instantiation: $ => $._expression, /*prec.left(
+     type_instantiation: $ => prec.left(0,
       seq(
-        choice($.identifier, $.built_in_type, $.function_header, $.type_operator), // this can be a lambda type, array, pointer_to, or type, or even a member expression
+        choice($.identifier, $.built_in_type, $.function_header, $.type_operator, $.binary_type_operator), // $.call, $.member_access), // this can be a lambda type, array, pointer_to, or type, or even a member expression
         optional("#must")
       )), 
-*/
 
 
     using_statement: $ => prec(1, seq( // precedence over unary using
@@ -527,6 +536,7 @@ module.exports = grammar({
       "#char",
       "#bake_arguments",
       "#run",
+      "#insert",
       "#insert_internal",
       "#place",
       "#placeholder",
@@ -642,11 +652,6 @@ module.exports = grammar({
       $._statement,
     )),
 
-    // good luck lol!
-    insert_lol: $ => token(seq(
-      "#insert",
-      /.*/,
-    )),
 
     ternary_expression: $ => prec.left(seq(
       "ifx",

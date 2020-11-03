@@ -492,10 +492,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "load_statement",
           "named": true
         },
@@ -889,6 +885,29 @@
         },
         {
           "type": "union_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "binary_type_operator",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "call",
+          "named": true
+        },
+        {
+          "type": "member_access",
+          "named": true
+        },
+        {
+          "type": "subscript",
           "named": true
         }
       ]
@@ -1720,10 +1739,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "load_statement",
           "named": true
         },
@@ -2001,10 +2016,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "load_statement",
           "named": true
         },
@@ -2148,10 +2159,6 @@
         },
         {
           "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "insert_lol",
           "named": true
         },
         {
@@ -2462,10 +2469,6 @@
         },
         {
           "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "insert_lol",
           "named": true
         },
         {
@@ -2848,10 +2851,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "lambda_expression",
           "named": true
         },
@@ -3067,10 +3066,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "lambda_expression",
           "named": true
         },
@@ -3235,10 +3230,6 @@
         },
         {
           "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "insert_lol",
           "named": true
         },
         {
@@ -3625,6 +3616,21 @@
         ]
       }
     },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "lambda_header",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "lambda_header",
+    "named": true,
+    "fields": {},
     "children": {
       "multiple": true,
       "required": false,
@@ -4015,10 +4021,6 @@
           "named": true
         },
         {
-          "type": "type_instantiation",
-          "named": true
-        },
-        {
           "type": "unary_expression",
           "named": true
         },
@@ -4174,10 +4176,6 @@
         },
         {
           "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "insert_lol",
           "named": true
         },
         {
@@ -4653,10 +4651,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "load_statement",
           "named": true
         },
@@ -4785,10 +4779,6 @@
         },
         {
           "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "insert_lol",
           "named": true
         },
         {
@@ -5251,6 +5241,10 @@
       "required": true,
       "types": [
         {
+          "type": "binary_type_operator",
+          "named": true
+        },
+        {
           "type": "built_in_type",
           "named": true
         },
@@ -5581,10 +5575,6 @@
           "named": true
         },
         {
-          "type": "insert_lol",
-          "named": true
-        },
-        {
           "type": "lambda_expression",
           "named": true
         },
@@ -5680,10 +5670,6 @@
     "named": false
   },
   {
-    "type": "#XXX_temporary_no_type_info",
-    "named": false
-  },
-  {
     "type": "#assert",
     "named": false
   },
@@ -5729,6 +5715,14 @@
   },
   {
     "type": "#specified",
+    "named": false
+  },
+  {
+    "type": "#type_info_none",
+    "named": false
+  },
+  {
+    "type": "#type_info_procedures_are_void_pointers",
     "named": false
   },
   {
@@ -5934,10 +5928,6 @@
   {
     "type": "inline",
     "named": false
-  },
-  {
-    "type": "insert_lol",
-    "named": true
   },
   {
     "type": "note_simple",
