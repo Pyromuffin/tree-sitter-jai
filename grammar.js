@@ -18,15 +18,19 @@ module.exports = grammar({
     [$.switch, $._binary_expression],
     [$.parenthesis, $.parameter],
     [$.func_call, $.parameter],
-    [$.parameter, $._named_decl_expression],
-    [$.trailing_return_types, $.function_header],
+    //[$.parameter, $._named_decl_expression],
+    //[$.trailing_return_types, $.function_header],
     [$.trailing_return_types, $._parameter_list],
+    [$._expression, $.names],
+    //[$.func_call, $.func_call_in_progress],
+    //[$._argument_list, $.argument_list_in_progress]
+    [$._named_decl_expression, $.unary_operator_left]
   ],
 
   rules: {
 
     source_file: $ => repeat(
-        $._statement,
+        $._statement
       ),
 
 
@@ -52,11 +56,11 @@ module.exports = grammar({
       $._unary_expression,
       $.cast_expression,
       $.parenthesis,
-      $.built_in_type,
+      //$.built_in_type,
       $.uninitialized_token,
       $.identifier,
       $.func_call,
-      $.array_literal,
+      //$.array_literal,
       $._expression_with_block,
       $.lambda_expression,
       $.expression_like_directive,
@@ -68,6 +72,7 @@ module.exports = grammar({
       $.typed_compile_time_array_literal,
       $.spicy_insert,
       $.code_directive,
+      //$.func_call_in_progress
     ),
 
     parenthesis: $ => seq(
@@ -91,7 +96,7 @@ module.exports = grammar({
       $.union_definition,
     )),
 
-    _statement: $ => choice(
+    _statement: $ =>  choice(
       $.return_statement,
       $.using_statement,
       $.if_statement,
@@ -291,6 +296,7 @@ module.exports = grammar({
       _argument_list: $ => prec(1, seq(
         "(",
         CommaSep($.argument),
+        optional(","),
         ")",
       )),
 
@@ -299,7 +305,12 @@ module.exports = grammar({
         $._argument_list,
       ),
 
-      
+      argument_list_in_progress: $ => prec(1, seq(
+        "(",
+        CommaSep($.argument),
+        //optional(","),
+        //"\n"
+      )),
 
       trailing_return_types: $ => prec.right(seq(
         "->",
@@ -320,8 +331,9 @@ module.exports = grammar({
         ')'
       ),
   
-      _named_decl_expression: $ => prec.left(seq(
-        $._expression,
+    _named_decl_expression: $ => prec.left(3, seq(
+        repeat("$"),
+        $.identifier,
         ":",
         choice(
           $._expression, 
@@ -331,6 +343,7 @@ module.exports = grammar({
       )),
 
       parameter: $ => choice(
+        $.using_expression,
         $._named_decl_expression,
         $._expression,
       ),
@@ -413,7 +426,7 @@ module.exports = grammar({
         choice($._expression, $.imperative_scope, $._named_decl_expression) // you can probably put a lot of other things here.
       )),
 
-    names: $ => CommaSep1($._expression), // can this be identifiers??
+    names: $ => CommaSep1($.identifier), // can this be identifiers??
 
 
     variable_initializer: $ => seq(
@@ -456,14 +469,18 @@ module.exports = grammar({
       )
     )),
 
-    using_statement: $ => prec(1, seq( // precedence over unary using
+    using_expression: $ => seq( // precedence over unary using
+      "using",
+        $._named_decl_expression,
+    ),
+
+    using_statement: $ => seq( // precedence over unary using
       "using",
       choice(
         $.named_decl,
         $._expression_statement,
       )
-    )),
-
+    ),
 
     _assignment_operator: $=> token(choice(
           "=", 
@@ -563,8 +580,8 @@ module.exports = grammar({
     )),
 
     unary_operator_left: $ => choice(
-    "-", "+", "!", "*", "<<", "~", "xx", "xx,no_check", "$", 
-     "inline", "using",  "..", ".",
+    "-", "+", "!", "*", "<<", "~", "xx", "xx,no_check", 
+     "inline",  "..", ".", "$",
       $.array_decl,
       $.relative_pointer,
       $.operator_like_directive,
@@ -572,15 +589,37 @@ module.exports = grammar({
 
      _unary_expression: $ => $._unary_expression_left,
 
-    _unary_expression_left: $ =>prec.right(seq(
+    _unary_expression_left: $ =>prec.right( seq(
       $.unary_operator_left, 
       $._expression
     )),
       
 
+    // the things that can go into member access is:
+    // identifier
+    // subscript
+    // function call
+    // ((Cursor*)(100 + 100))->Child();
+    // basically the thing directly to the right of . is ALWAYS an identifier.
 
-    member_access: $ => prec.left(4, seq($._expression, '.', $._expression)),
-    subscript: $ => prec.left(4, seq($._expression, '[', $._expression, "]")),
+    _subscript_rhs: $ => prec(4, seq(
+      "[",
+      $._expression,
+      "]"
+    )),
+
+    _member_access_rhs: $ => prec.left(4, seq(
+      ".", $.identifier,
+      optional(choice(
+        $._argument_list,
+        $._subscript_rhs,
+        $._member_access_rhs,
+      ))
+    )),
+
+    member_access: $ => prec.left(4,  seq($._expression, $._member_access_rhs)),
+    //member_access_nothing: $ => prec(4,  seq($._expression, '.', choice(" ", "\n"))),
+    subscript: $ => prec.left(4, seq($._expression, $._subscript_rhs)),
     switch: $ => prec.right( seq( $._expression, "==", $.imperative_scope)),
 
     foreign_directive: $ => prec.left(seq(
@@ -594,6 +633,7 @@ module.exports = grammar({
 
 
     _binary_expression: $ => choice(
+      //$.member_access_nothing,
       $.member_access,
       $.subscript,
       $.switch,
