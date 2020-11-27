@@ -15,7 +15,7 @@ module.exports = grammar({
   externals: $ => [$.here_string],
 
   conflicts: $ =>[
-    [$.switch, $._binary_expression],
+    [$.switch, $.binary_expression],
     [$.parenthesis, $.parameter],
     [$.func_call, $.parameter],
     //[$.parameter, $._named_decl_expression],
@@ -24,7 +24,7 @@ module.exports = grammar({
     [$._expression, $.names],
     //[$.func_call, $.func_call_in_progress],
     //[$._argument_list, $.argument_list_in_progress]
-    [$._named_decl_expression, $.unary_operator_left]
+    [$._named_decl_expression, $._unary_operator_left]
   ],
 
   rules: {
@@ -50,10 +50,11 @@ module.exports = grammar({
 
     _expression: $ => choice(
       $.number,
+      $.float_literal,
       $.scientific_notation,
       $.string_literal,
-      $._binary_expression,
-      $._unary_expression,
+      $.binary_expression,
+      $.unary_expression,
       $.cast_expression,
       $.parenthesis,
       //$.built_in_type,
@@ -72,6 +73,9 @@ module.exports = grammar({
       $.typed_compile_time_array_literal,
       $.spicy_insert,
       $.code_directive,
+      $.member_access,
+      $.subscript,
+      $.member_access_nothing,
       //$.func_call_in_progress
     ),
 
@@ -263,6 +267,7 @@ module.exports = grammar({
       "]"
     ),
 
+    /*
     built_in_type: $ => token(choice(
       'bool',
       'float32',
@@ -281,7 +286,7 @@ module.exports = grammar({
       'u64',
       'void',
     )),
-
+*/
 
       argument_name: $ => seq(
         $.identifier,
@@ -462,7 +467,7 @@ module.exports = grammar({
       $.names,
       ":",
       choice(
-        field("type", seq($._expression, ";")),
+        seq($._expression, ";"),
         seq($.variable_initializer, ";"),
         seq($.const_initializer, ";"),
         seq(choice(":","="), $._expression_with_block),
@@ -579,18 +584,20 @@ module.exports = grammar({
       "#placeholder",
     )),
 
-    unary_operator_left: $ => choice(
-    "-", "+", "!", "*", "<<", "~", "xx", "xx,no_check", 
-     "inline",  "..", ".", "$",
+      pointer_to: $ => "*",
+
+    _unary_operator_left: $ => choice(
+      "-", "+", "!", "<<", "~", "xx", "xx,no_check", 
+      "inline", "..", ".", "$",
+      $.pointer_to,
       $.array_decl,
       $.relative_pointer,
       $.operator_like_directive,
      ),
 
-     _unary_expression: $ => $._unary_expression_left,
 
-    _unary_expression_left: $ =>prec.right( seq(
-      $.unary_operator_left, 
+    unary_expression: $ =>prec.right( seq(
+      $._unary_operator_left, 
       $._expression
     )),
       
@@ -609,16 +616,11 @@ module.exports = grammar({
     )),
 
     _member_access_rhs: $ => prec.left(4, seq(
-      ".", $.identifier,
-      optional(choice(
-        $._argument_list,
-        $._subscript_rhs,
-        $._member_access_rhs,
-      ))
+      ".", $.identifier
     )),
 
     member_access: $ => prec.left(4,  seq($._expression, $._member_access_rhs)),
-    //member_access_nothing: $ => prec(4,  seq($._expression, '.', choice(" ", "\n"))),
+    member_access_nothing: $ => prec(4,  seq($._expression, '.', choice(" ", "\n"))),
     subscript: $ => prec.left(4, seq($._expression, $._subscript_rhs)),
     switch: $ => prec.right( seq( $._expression, "==", $.imperative_scope)),
 
@@ -632,10 +634,8 @@ module.exports = grammar({
     ))),
 
 
-    _binary_expression: $ => choice(
-      //$.member_access_nothing,
-      $.member_access,
-      $.subscript,
+    binary_expression: $ => choice(
+      
       $.switch,
       prec.left(3, seq($._expression, '/interface', $._expression)),
       prec.left(3, seq($._expression, '#align', $._expression)),
@@ -802,8 +802,9 @@ module.exports = grammar({
 
     identifier: $ => /[a-zA-Z_][a-zA-Z_0-9\\]*/,
 
-    number: $ => /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
-    
+    number: $ => /\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
+    float_literal: $ =>/\d[\d_]*\.\d[\d_]*|\.\d[\d_]*/,
+
     scientific_notation: $ => token(seq(
       /\d[\d_]*\.\d+|\d[\d_]*|\.\d[\d_]*|0(h|x|X)[a-fA-F0-9_]+|0b[01_]+/,
       choice("e", "E"),
